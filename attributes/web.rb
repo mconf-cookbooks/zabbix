@@ -4,6 +4,7 @@ default['zabbix']['web']['install_method']  = 'apache'
 default['zabbix']['web']['fqdn']            = node['fqdn']
 default['zabbix']['web']['aliases']         = ['zabbix']
 default['zabbix']['web']['port']            = 80
+default['apache']['mpm'] = "prefork"
 
 default['zabbix']['web']['php']['fastcgi_listen'] = '127.0.0.1:9000' # only applicable when using php-fpm (nginx)
 default['zabbix']['web']['php']['settings']    = {
@@ -16,7 +17,7 @@ default['zabbix']['web']['php']['settings']    = {
 }
 
 default['zabbix']['web']['packages'] = value_for_platform_family(
-  'debian' => %w(php5-mysql php5-gd libapache2-mod-php5),
+  'debian' => %w(php5-mysql php5-gd libapache2-mod-php5 apache2-mpm-prefork),
   'rhel' =>
     if node['platform_version'].to_f < 6.0
       %w(php53-mysql php53-gd php53-bcmath php53-mbstring)

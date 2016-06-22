@@ -75,3 +75,12 @@ end
 apache_site '000-default' do
   enable false
 end
+
+template '/etc/php5/apache2/php.ini' do
+  source 'zabbix_web.php.ini.erb'
+  owner 'root'
+  group 'root'
+  mode '644'
+  variables(:dbsocket => node['zabbix']['database']['dbsocket'])
+  notifies :restart, 'service[apache2]', :immediately
+end

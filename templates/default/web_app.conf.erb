@@ -9,6 +9,7 @@
     AllowOverride None
     Order allow,deny
     Allow from all
+    Require all granted
     <% @params[:php_settings].each do |name, value| %>
     php_admin_value <%=name%> <%=value%>
     <%end%>
@@ -32,8 +33,9 @@
   CustomLog <%= node['apache']['log_dir'] %>/<%= @params[:server_name] %>-access.log combined
 
   RewriteEngine On
-  RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
-  RewriteLogLevel 0
+  # TODO: Update RewriteLog
+  #RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
+  #RewriteLogLevel 0
 
   # Canonical host, <%= @params['server_name'] %>
   RewriteCond %{HTTP_HOST}   !^<%= @params['server_name'] %> [NC]
