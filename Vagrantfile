@@ -4,6 +4,10 @@
 # This Vagrantfile needs the vagrant-omnbius plugin installed
 # To install this, run "vagrant plugin install vagrant-omnibus"
 
+##############################################################
+#             This Vagrantfile is not up-to-date!            #
+##############################################################
+
 Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox do |vbox|
     vbox.customize ['modifyvm', :id,
