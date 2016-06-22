@@ -2,8 +2,7 @@ include_recipe 'zabbix::common'
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
-include_recipe 'database::mysql'
-include_recipe 'mysql::client'
+include_recipe 'mconf-db::default'
 
 # Generates passwords if they aren't already set
 # This is INSECURE because node.normal persists the passwords to the chef
@@ -11,6 +10,10 @@ include_recipe 'mysql::client'
 #
 # Under chef_solo these must be set somehow because node.normal doesn't persist
 # between runs
+
+gem_package "mysql" do
+  action :install
+end
 
 unless node['zabbix']['database']['dbpassword']
   node.normal['zabbix']['database']['dbpassword'] = secure_password
@@ -23,11 +26,11 @@ when 'rds_mysql'
   allowed_user_hosts  = '%'
   provider = Chef::Provider::ZabbixDatabaseMySql
 when 'mysql'
-  unless node['mysql']['server_root_password']
-    node.normal['mysql']['server_root_password'] = secure_password
+  unless node['zabbix']['database']['root_password']
+    node.normal['zabbix']['database']['root_password'] = secure_password
   end
   root_username       = 'root'
-  root_password       = node['mysql']['server_root_password']
+  root_password       = node['zabbix']['database']['root_password']
   allowed_user_hosts  = node['zabbix']['database']['allowed_user_hosts']
   provider = Chef::Provider::ZabbixDatabaseMySql
 when 'postgres'
@@ -54,6 +57,7 @@ zabbix_database node['zabbix']['database']['dbname'] do
   provider provider
   host node['zabbix']['database']['dbhost']
   port node['zabbix']['database']['dbport'].to_i
+  socket node['zabbix']['database']['dbsocket']
   username node['zabbix']['database']['dbuser']
   password node['zabbix']['database']['dbpassword']
   root_username root_username

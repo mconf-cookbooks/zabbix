@@ -8,6 +8,7 @@ def load_current_resource
   @current_resource.dbname(@new_resource.dbname)
   @current_resource.host(@new_resource.host)
   @current_resource.port(@new_resource.port)
+  @current_resource.socket(@new_resource.socket)
   @current_resource.root_username(@new_resource.root_username)
   @current_resource.root_password(@new_resource.root_password)
 
@@ -15,15 +16,16 @@ def load_current_resource
     @current_resource.dbname,
     @current_resource.host,
     @current_resource.port,
+    @current_resource.socket,
     @current_resource.root_username,
     @current_resource.root_password)
 end
 
-def database_exists?(dbname, host, port, root_username, root_password)
+def database_exists?(dbname, host, port, socket, root_username, root_password)
   exists = false
   db = nil
   begin
-    db = ::Mysql.new(host, root_username, root_password, dbname, port)
+    db = ::Mysql.new(host, root_username, root_password, dbname, port, socket)
     exists = true
     Chef::Log.info("Connection to database '#{dbname}' on '#{host}' successful")
   rescue ::Mysql::Error
@@ -54,6 +56,7 @@ def create_new_database
   root_connection = {
     :host => new_resource.host,
     :port => new_resource.port,
+    :socket => new_resource.socket,
     :username => new_resource.root_username,
     :password => new_resource.root_password
   }
@@ -95,8 +98,9 @@ def create_new_database
   root_password = "-p#{new_resource.root_password}"
   host = "-h #{new_resource.host}"
   port = "-P #{new_resource.port}"
+  socket = "-S #{new_resource.socket}"
   dbname = new_resource.dbname
-  sql_command = "#{executable} #{root_username} #{root_password} #{host} #{port} #{dbname}"
+  sql_command = "#{executable} #{root_username} #{root_password} #{host} #{port} #{dbname} #{socket}"
 
   zabbix_path = ::File.join(new_resource.source_dir, "zabbix-#{new_resource.server_version}")
   sql_scripts = if new_resource.server_version.to_f < 2.0
@@ -132,6 +136,6 @@ def create_new_database
     database_name new_resource.dbname
     host new_resource.allowed_user_hosts
     privileges [:select, :update, :insert, :create, :drop, :delete, :alter, :index]
-    action :nothing
+    action [:create, :grant]
   end
 end

@@ -11,6 +11,7 @@ end
 attribute :dbname, :kind_of => String, :name_attribute => true
 attribute :host, :kind_of => String, :required => true
 attribute :port, :kind_of => Integer, :required => true
+attribute :socket, :kind_of => String, :required => true
 attribute :username, :kind_of => String, :required => true
 attribute :password, :kind_of => String, :required => true
 attribute :root_username, :kind_of => String, :required => true

@@ -4,6 +4,8 @@ default['zabbix']['database']['dbuser']             = 'zabbix'
 default['zabbix']['database']['dbhost']             = 'localhost'
 default['zabbix']['database']['dbpassword']         = nil
 default['zabbix']['database']['dbport']             = '3306'
+default['zabbix']['database']['dbsocket']           = '/var/run/mysql-default/mysqld.sock'
+default['zabbix']['database']['root_password']      = 'password'
 default['zabbix']['database']['allowed_user_hosts'] = 'localhost'
 
 default['zabbix']['database']['rds_master_user']      = nil
