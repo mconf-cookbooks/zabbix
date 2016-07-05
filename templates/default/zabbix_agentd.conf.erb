@@ -1,26 +1,144 @@
 # Do not edit
 # Created by chef
-Hostname=<%= node['zabbix']['agent']['hostname'] %>
-Include=<%= node['zabbix']['agent']['include_dir'] %>
-Server=<%= node['zabbix']['agent']['servers'].join(',') %>
-<% if node['zabbix']['agent']['log_file'] -%>
-LogFile=<%= node['zabbix']['agent']['log_file'] %>
+# Agent configuration for Zabbix 3.0.0 without TLS support
+
+<% if node['zabbix']['agent']['alias'] -%>
+Alias=<%= node['zabbix']['agent']['alias'] %>
 <% end -%>
+
+<% if node['zabbix']['agent']['allow_root'] -%>
+AllowRoot=<%= node['zabbix']['agent']['allow_root'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['buffer_send'] -%>
+BufferSend=<%= node['zabbix']['agent']['buffer_send'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['buffer_size'] -%>
+BufferSize=<%= node['zabbix']['agent']['buffer_size'] %>
+<% end -%>
+
 <% if node['zabbix']['agent']['debug_level'] -%>
 DebugLevel=<%= node['zabbix']['agent']['debug_level'] %>
 <% end -%>
+
 <% if node['zabbix']['agent']['enable_remote_commands'] -%>
-EnableRemoteCommands=1
+EnableRemoteCommands=<%= node['zabbix']['agent']['enable_remote_commands'] %>
 LogRemoteCommands=1
 <% end -%>
+
+<% if node['zabbix']['agent']['host_metadata'] -%>
+HostMetadata=<%= node['zabbix']['agent']['host_metadata'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['host_metadata_item'] -%>
+HostMetadataItem=<%= node['zabbix']['agent']['host_metadata_item'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['hostname'] -%>
+Hostname=<%= node['zabbix']['agent']['hostname'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['hostname_item'] -%>
+HostnameItem=<%= node['zabbix']['agent']['hostname_item'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['include'] -%>
+Include=<%= node['zabbix']['agent']['include'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['listen_ip'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['listen_ip'].empty? -%>
+ListenIP=<%= node['zabbix']['agent']['listen_ip'].join(',') %>
+    <% end -%>
+<% else -%>
+ListenIP=<%= node['zabbix']['agent']['listen_ip'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['list_port'] -%>
+ListenPort=<%= node['zabbix']['agent']['listen_port'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['load_module'] -%>
+LoadModule=<%= node['zabbix']['agent']['load_module'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['load_module_path'] -%>
+LoadModulePath=<%= node['zabbix']['agent']['load_module_path'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['log_file'] -%>
+LogFile=<%= node['zabbix']['agent']['log_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['log_file_size'] -%>
+LogFileSize=<%= node['zabbix']['agent']['log_file_size'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['log_type'] -%>
+LogType=<%= node['zabbix']['agent']['log_type'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['log_remote_commands'] -%>
+LogRemoteCommands=<%= node['zabbix']['agent']['log_remote_commands'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['max_lines_per_second'] -%>
+MaxLinesPerSecond=<%= node['zabbix']['agent']['max_lines_per_second'] %>
+<% end -%>
+
 <% if node['zabbix']['agent']['pid_file'] -%>
 PidFile=<%= node['zabbix']['agent']['pid_file'] %>
 <% end -%>
-<% if node.zabbix.agent.servers_active.first -%>
-ServerActive=<%= node.zabbix.agent.servers_active.join(',') %>
+
+<% if node['zabbix']['agent']['refresh_active_checks'] -%>
+RefreshActiveChecks=<%= node['zabbix']['agent']['refresh_active_checks'] %>
 <% end -%>
+
+<% if node['zabbix']['agent']['server'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['server'].empty? -%>
+Server=<%= node['zabbix']['agent']['server'].join(',') %>
+    <% end -%>
+<% else -%>
+Server=<%= node['zabbix']['agent']['server'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['server_active'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['server_active'].empty? -%>
+ServerActive=<%= node['zabbix']['agent']['server_active'].join(',') %>
+    <% end -%>
+<% else -%>
+ServerActive=<%= node['zabbix']['agent']['server_active'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['source_ip'] -%>
+SourceIP=<%= node['zabbix']['agent']['source_ip'] %>
+<% end -%>
+
 <% if node['zabbix']['agent']['start_agents'] -%>
 StartAgents=<%= node['zabbix']['agent']['start_agents'] %>
 <% end -%>
-ListenPort=<%=node['zabbix']['agent']['listen_port'] %>
+
+<% if node['zabbix']['agent']['timeout'] -%>
 Timeout=<%= node['zabbix']['agent']['timeout'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['unsafe_user_parameters'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['unsafe_user_parameters'].empty? -%>
+UnsafeUserParameters=<%= node['zabbix']['agent']['unsafe_user_parameters'].join(',') %>
+    <% end -%>
+<% else -%>
+UnsafeUserParameters=<%= node['zabbix']['agent']['unsafe_user_parameters'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['user'] -%>
+User=<%= node['zabbix']['agent']['user'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['user_parameter'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['user_parameter'].empty? -%>
+UnsafeUserParameters=<%= node['zabbix']['agent']['user_parameter'].join(',') %>
+    <% end -%>
+<% else -%>
+UnsafeUserParameters=<%= node['zabbix']['agent']['user_parameter'] %>
+<% end -%>

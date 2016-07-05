@@ -1,5 +1,5 @@
 root_dirs = [
-  node['zabbix']['agent']['include_dir']
+  node['zabbix']['agent']['include']
 ]
 
 # Create root folders

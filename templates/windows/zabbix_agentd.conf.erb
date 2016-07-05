@@ -1,7 +1,7 @@
 # Do not edit
 # Created by chef
 Hostname=<%= node['zabbix']['agent']['hostname'] %>
-<% ::Dir.foreach(node['zabbix']['agent']['include_dir']).sort.drop(2) do |dir| -%>
+<% ::Dir.foreach(node['zabbix']['agent']['include']).sort.drop(2) do |dir| -%>
 Include=<%= dir %>
 <% end -%>
 Server=<%= node.zabbix.agent.servers.join(',') %>
