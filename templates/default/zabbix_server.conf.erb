@@ -20,32 +20,32 @@ CacheSize=<%= node['zabbix']['server']['cache_size'] %>
 CacheUpdateFrequency=<%= node['zabbix']['server']['cache_update_frequency'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_host'] -%>
-DBHost=<%= node['zabbix']['server']['db_host'] %>
+<% if node['zabbix']['database']['dbhost'] -%>
+DBHost=<%= node['zabbix']['database']['dbhost'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_name'] -%>
-DBName=<%= node['zabbix']['server']['db_name'] %>
+<% if node['zabbix']['database']['dbname'] -%>
+DBName=<%= node['zabbix']['database']['dbname'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_password'] -%>
-DBPassword=<%= node['zabbix']['server']['db_password'] %>
+<% if node['zabbix']['database']['dbpassword'] -%>
+DBPassword=<%= node['zabbix']['database']['dbpassword'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_port'] -%>
-DBPort=<%= node['zabbix']['server']['db_port'] %>
+<% if node['zabbix']['database']['dbport'] -%>
+DBPort=<%= node['zabbix']['database']['dbport'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_schema'] -%>
-DBSchema=<%= node['zabbix']['server']['db_schema'] %>
+<% if node['zabbix']['database']['dbschema'] -%>
+DBSchema=<%= node['zabbix']['database']['dbschema'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_socket'] -%>
-DBSocket=<%= node['zabbix']['server']['db_socket'] %>
+<% if node['zabbix']['database']['dbsocket'] -%>
+DBSocket=<%= node['zabbix']['database']['dbsocket'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['db_user'] -%>
-DBUser=<%= node['zabbix']['server']['db_user'] %>
+<% if node['zabbix']['database']['dbuser'] -%>
+DBUser=<%= node['zabbix']['database']['dbuser'] %>
 <% end -%>
 
 <% if node['zabbix']['server']['debug_level'] -%>
@@ -78,6 +78,10 @@ Include=<%= node['zabbix']['server']['include'] %>
 
 <% if node['zabbix']['server']['java_gateway'] -%>
 JavaGateway=<%= node['zabbix']['server']['java_gateway'] %>
+<% end -%>
+
+<% if node['zabbix']['server']['java_gateway_port'] -%>
+JavaGatewayPort=<%= node['zabbix']['server']['java_gateway_port'] %>
 <% end -%>
 
 <% if node['zabbix']['server']['listen_ip'] -%>
