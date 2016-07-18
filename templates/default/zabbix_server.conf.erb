@@ -84,7 +84,11 @@ JavaGateway=<%= node['zabbix']['server']['java_gateway'] %>
 JavaGatewayPort=<%= node['zabbix']['server']['java_gateway_port'] %>
 <% end -%>
 
-<% if node['zabbix']['server']['listen_ip'] -%>
+<% if node['zabbix']['server']['listen_ip'].respond_to?("each") -%>
+    <% if not node['zabbix']['server']['listen_ip'].empty? -%>
+ListenIP=<%= node['zabbix']['server']['listen_ip'].join(',') %>
+    <% end -%>
+<% else -%>
 ListenIP=<%= node['zabbix']['server']['listen_ip'] %>
 <% end -%>
 
