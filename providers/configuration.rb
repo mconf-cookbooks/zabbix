@@ -12,6 +12,9 @@ action :import do
               :templateLinkage => {
                   :createMissing => true,
                   :updateMissing => true
+              },
+              :groups => {
+                  :createMissing => true
               }
           },
           :source => new_resource.source
