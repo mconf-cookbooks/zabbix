@@ -34,3 +34,7 @@ ruby_block 'start service' do
     notifies action, 'service[zabbix_agentd]'
   end
 end
+
+if node['zabbix']['agent']['registration']
+    include_recipe 'zabbix::agent_registration'
+end
