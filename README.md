@@ -3,18 +3,18 @@
 # DESCRIPTION
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/laradji/zabbix?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-This cookbook install zabbix-agent and zabbix-server.
+This cookbook installs zabbix-agent and zabbix-server.
 
-By defaut the cookbook installs zabbix-agent, check the attribute for enable/disable zabbix_server / web or disable zabbix_agent installation.
+By defaut the cookbook installs zabbix-agent. Check the attribute for enable/disable zabbix-server/web or disable zabbix-agent installation.
 
-Default login password for zabbix frontend is admin / zabbix  CHANGE IT !
+Default login password for zabbix frontend is *admin*/*zabbix*. **Change it!**
 
 # USAGE
 
-Be careful when you update your server version, you need to run the sql patch in /opt/zabbix-$VERSION.
+Be careful when you update your server version. You need to run the sql patch in /opt/zabbix-$VERSION.
 
 If you do not specify source\_url attributes for agent or server they will be set to download the specified
-branch and version from the official Zabbix source repository. If you want to upgrade later, you need to
+brance and version from the official Zabbix source repository. If you want to upgrade later, you need to
 either nil out the source\_url attributes or set them to the url you wish to download from.
 
     node['zabbix']['agent']['source_url'] = nil
@@ -22,28 +22,33 @@ either nil out the source\_url attributes or set them to the url you wish to dow
 
 Please include the default recipe before using any other recipe.
 
-Installing the Agent :
+Installing basic agent:
 
     "recipe[zabbix]"
 
-Installing the Server :
+Installing basic server:
 
     "recipe[zabbix]",  
     "recipe[zabbix::server]"
 
-Installing the Database :
+Installing the database :
 
-    "recipe[mysql::server]",
     "recipe[zabbix]",
     "recipe[zabbix::database]"
 
-Installing all 3 - Database MUST come before Server
+Installing database and server (database must come before server):
 
-    "recipe[database::mysql]",
-    "recipe[mysql::server]",
     "recipe[zabbix]",
     "recipe[zabbix::database]",
     "recipe[zabbix::server]"
+
+Installing web frontend (server must be already installed):
+
+    "recipe[zabbix::web]"
+
+NOTE:
+   
+The web frontend is installed along with Zabbix server by default.
 
 NOTE:
 
@@ -54,50 +59,90 @@ Include "recipe[yum::epel]" in your runlist or satisfy these requirements some o
 
 # ATTRIBUTES
 
-Don't forget to set :
+The values shown below are just examples.
 
-    node.set['zabbix']['agent']['servers'] = ["Your_zabbix_server.com","secondaryserver.com"]
-    node.set['zabbix']['web']['fqdn'] or you will not have the zabbix web interface
+Important to set on agent:
 
-Note :
+    node['zabbix']['agent']['hostname'] = "<my_hostname>"
+    node['zabbix']['agent']['server'] = "127.0.0.1"
+    node['zabbix']['agent']['listen_ip'] = "<my_ip>"
+    node['zabbix']['web']['fqdn'] = "<fqdn_of_server>"
 
-A Zabbix agent running on the Zabbix server will need to :
+Other agent's attributes that may be important are:
 
-* use a different account than the on the server uses or it will be able to spy on private data.
-* specify the local Zabbix server using the localhost (127.0.0.1, ::1) address.
+    node['zabbix']['agent']['registration'] = true # It is set to false by default
+    node['zabbix']['agent']['groups'] = ["Mconf"]
+    node['zabbix']['agent']['templates'] = ["Template Mconf"]
 
-example :
+NOTE:
 
-## Server
+Agent does not register to server by default. It is necessary to set 'registration' to true.
+
+Important to set on server:
+
+    node['fqdn'] = "<my_fqdn>"
+    node['zabbix']['agent']['server'] = "<my_ip>"
+    node['zabbix']['server']['install'] = true # It is set to false by default
+    node['zabbix']['web']['install'] = true # It is set to false by default
+    node['zabbix']['web']['fqdn'] = "<my_fqdn>"
+
+Other server's attributes that may be important are:
+
+    node['zabbix']['server']['import_templates'] = true # It is set to false by default
+    node['zabbix']['server']['template_files'] = ["template-mconf"]
+    node['zabbix']['database']['dbpassword'] = "<my_password>"
+
+NOTE:
+
+Templates are not imported into server by default. It is necessary to set 'import_templates' to true and specify the templates filenames (without extension) in 'template_files' attribute. The templates files must be located at 'files/default/' as .xml.
+
+NOTE:
+
+A Zabbix agent running on the Zabbix server will need to:
+
+* Use a different account than that the server uses or it will be able to spy on private data.
+* Specify the local Zabbix server using the localhost (127.0.0.1, ::1) address (or another server interface).
+
+## Examples of installation methods:
+
+**Server**
 
 	  node.set['zabbix']['server']['branch'] = "ZABBIX%20Latest%20Stable"
-	  node.set['zabbix']['server']['version'] = "2.0.0"
+	  node.set['zabbix']['server']['version'] = "3.0.0"
 	  node.set['zabbix']['server']['source_url'] = nil
-	  ndoe.set['zabbix']['server']['install_method'] = "source"
+	  node.set['zabbix']['server']['install_method'] = "source"
 
-## Agent
+**Agent** 
 
 	  node.set['zabbix']['agent']['branch'] = "ZABBIX%20Latest%20Stable"
-	  node.set['zabbix']['agent']['version'] = "2.0.0"
+	  node.set['zabbix']['agent']['version'] = "3.0.0"
 	  node.set['zabbix']['agent']['source_url'] = nil
 	  node.set['zabbix']['agent']['install_method'] = "prebuild"
 
-## Database
+**Database**
 
-    node.set['zabbix']['database']['install_method'] = 'mysql'
     node.set['zabbix']['database']['dbname'] = "zabbix"
     node.set['zabbix']['database']['dbuser'] = "zabbix"
     node.set['zabbix']['database']['dbhost'] = "localhost"
-    node.set['zabbix']['database']['dbpassword'] = 'password'
+    node.set['zabbix']['database']['dbpassword'] = "password"
     node.set['zabbix']['database']['dbport'] = "3306"
+    node.set['zabbix']['database']['dbsocket'] = "/var/run/mysql-default/mysqld.sock"
 
 If you are using AWS RDS
 
-    node.set['zabbix']['database']['install_method'] = 'rds_mysql'
-    node.set['zabbix']['database']['rds_master_user'] = 'username'
-    node.set['zabbix']['database']['rds_master_password'] = 'password'
+    node.set['zabbix']['database']['install_method'] = "rds_mysql"
+    node.set['zabbix']['database']['rds_master_user'] = "username"
+    node.set['zabbix']['database']['rds_master_password'] = "password"
 
+## Configuration attributes
 
+It is possible to set any of parameters supported by Zabbix agent and server in version 3.0.0. These configuration parameters will be placed at the configuration files `/etc/zabbix/zabbix_agentd.conf` and `/etc/zabbix/zabbix_server.conf` respectively.
+
+A complete list of parameters for agent and server can be found [here for agent](https://www.zabbix.com/documentation/3.0/manual/appendix/config/zabbix_agentd) and [here for server](https://www.zabbix.com/documentation/3.0/manual/appendix/config/zabbix_server).
+
+For instance, if you want to set CacheSize to 10M for Zabbix server, you can set
+
+    node['zabbix']['server']['cache_size'] = "10M"
 
 # RECIPES
 
@@ -147,9 +192,9 @@ WARNING: This recipe persists your database credentials back to the Chef server
 as plaintext  node attributes. To prevent this, consume the `zabbix_database`
 LWRP in your own wrapper cookbook.
 
-Creates and initializes the Zabbix database
+Creates and initializes the Zabbix database. It currently uses `mconf-db` to install MySQL.
 
-Currenly only supports MySql and RDS MySql databases
+Currently it only supports MySQL and RDS MySQL databases.
 
 If they are not already set, this recipe will generate the following attributes:
 
@@ -167,6 +212,7 @@ The database setup uses the following attributes:
     node['zabbix']['database']['dbname']
     node['zabbix']['database']['dbuser']
     node['zabbix']['database']['dbpassword']
+    node['zabbix']['database']['dbsocket']
 
     node['zabbix']['database']['install_method']
 
@@ -185,32 +231,25 @@ Opens firewall rules to allow Zabbix nodes to communicate with each other.
 
 ## server
 
-Delegates to other recipes to install the Zabbix server and Web components.
+Delegates to other recipes to install the Zabbix server and web frontend components.
 
 You can control the server and web installs with the following attributes:
 
     node['zabbix']['server']['install'] = true
     node['zabbix']['server']['install_method'] = 'source'
     node['zabbix']['web']['install'] = true
+    
+You can also enable template importing to server with:
 
-If you are using a MySql or RDS MySql database make sure your runlist
-includes:
-
-    "recipe[database::mysql]",
-    "recipe[mysql::client]"
-
-If you are user a Postgres database make sure your runlist includes:
-
-    "recipe[database::postgresql]",
-    "recipe[postgresql::client]",
+    node['zabbix']['server']['import_templates'] = true
 
 ## server\_source
 
-Downloads and installs the Zabbix Server component from source
+Downloads and installs the Zabbix server component from source.
 
 If you are on a machine in the RHEL family of platforms, then you will
 need to install packages from the EPEL repository. The easiest way to do this
-is to add the following recipe to your runlist before zabbix::server\_source
+is to add the following recipe to your runlist before zabbix::server\_source:
 
     recipe "yum::epel"
 
@@ -227,10 +266,15 @@ The server also needs to know about:
     node['zabbix']['database']['dbuser']
     node['zabbix']['database']['dbpassword']
     node['zabbix']['database']['dbport']
+    node['zabbix']['database']['dbsocket']
 
 ## web
 
-Creates an Apache site for the Zabbix Web component
+Creates an Apache site for the Zabbix web frontend component.
+
+It is included by `server` recipe by default. If you do not want the web frontend to be installed, set:
+
+    node['zabbix']['web']['install'] = false
 
 # LWRPs
 
@@ -238,7 +282,7 @@ Creates an Apache site for the Zabbix Web component
 
 ### resources/database
 
-Installs the Zabbix Database
+Installs the Zabbix database.
 
 The default provider is Chef::Provider::ZabbixDatabaseMySql in "providers/database_my_sql".
 If you want a different provider, make sure you set the following in your resource call.
@@ -251,9 +295,10 @@ If you want a different provider, make sure you set the following in your resour
 
 #### Attributes
 
-* `dbname` (Name Attribute) -  Name of the Zabbix databse to create
+* `dbname` (Name Attribute) -  Name of the Zabbix database to create
 * `host` - Host to create the database on
-* `port` - Port to connext to the database over
+* `port` - Port to connect to the database over
+* `socket` - Socket to connect to the database with
 * `username` - Name of the Zabbix database user
 * `password` - Password for the Zabbix database user
 * `root_username` - Name of the root user for the database server
@@ -266,38 +311,38 @@ If you want a different provider, make sure you set the following in your resour
 
 ### providers/database\_my\_sql
 
-Installs a MySql or RDS MySql Zabbix Database
+Installs a MySQL or RDS MySQL Zabbix database.
 
-This is the default provider for `resources/database`
+This is the default provider for `resources/database`.
 
-If you are using MySQL make sure you set
+If you are using MySQL make sure you set:
 
     root_username "root"
-    root_password "your root password"
+    root_password "<your_root_password>"
 
-If you are using RDS MySql make sure you set
+If you are using RDS MySql make sure you set:
 
-    root_username "your rds master username"
-    root_password "your rds master password"
+    root_username "<your_rds_master_username>"
+    root_password "<your_rds_master_password>"
 
 ### providers/database\_postgres
 
-Installs a Postgres Zabbix Database
+Installs a Postgres Zabbix database.
 
-Call the `zabbix_database` resource with
+Call the `zabbix_database` resource with:
 
     provider Chef::Provider::ZabbixDatabasePostgres
 
-Make sure you set
+Make sure you set:
 
     root_username 'postgres'
-    root_pasword  'your postgres admin password'
+    root_pasword  '<your_postgres_admin_password>'
 
 The `allowed_user_hosts` attribute is ignored
 
 ### resources/source
 
-Fetchs the Zabbix source tar and does something with it
+Fetchs the Zabbix source tar and does something with it.
 
 #### Actions
 * `extract_only` (Default Action) - Just fetch and extract the tar
@@ -315,8 +360,24 @@ Fetchs the Zabbix source tar and does something with it
 
 ### providers/source:
 
-Default implementation of how to Fetch and handle the Zabbix source code.
+Default implementation of how to fetch and handle the Zabbix source code.
 
+### resources/configuration
+
+Allows template importing into zabbix server.
+
+#### Actions
+* `import` (Default action) - Import templates files located at 'files/default/' into server
+
+#### Attributes
+* `name` (Name attribute) - An arbitrary name for the resource
+* `server_connection` - Server's information to connect to
+* `format` (Default: 'xml') - Format of template source
+* `source` - Template serialized string
+
+### providers/configuration
+
+Default implementation of how to import templates into Zabbix server. It is done via Zabbix API.
 
 # TODO
 
