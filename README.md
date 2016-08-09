@@ -47,10 +47,6 @@ Installing web frontend (server must be already installed):
     "recipe[zabbix::web]"
 
 NOTE:
-   
-The web frontend is installed along with Zabbix server by default.
-
-NOTE:
 
 If you are running on Redhat, Centos, Scientific or Amazon, you will need packages from EPEL.
 Include "recipe[yum::epel]" in your runlist or satisfy these requirements some other way.
