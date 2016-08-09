@@ -4,7 +4,7 @@ default['zabbix']['web']['install_method']  = 'apache'
 default['zabbix']['web']['fqdn']            = node['fqdn']
 default['zabbix']['web']['aliases']         = ['zabbix']
 default['zabbix']['web']['port']            = 80
-default['zabbix']['web']['install']         = true
+default['zabbix']['web']['install']         = false 
 default['apache']['mpm']                    = "prefork"
 
 default['zabbix']['web']['php']['fastcgi_listen'] = '127.0.0.1:9000' # only applicable when using php-fpm (nginx)
