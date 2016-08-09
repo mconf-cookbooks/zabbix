@@ -68,4 +68,7 @@ default['zabbix']['server']['host'] = 'localhost'
 default['zabbix']['server']['port'] = 10_051
 default['zabbix']['server']['name'] = nil
 
+default['zabbix']['server']['import_templates'] = false
 default['zabbix']['server']['template_files'] = []
+
+default['zabbix']['server']['install'] = false

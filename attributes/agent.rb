@@ -47,7 +47,7 @@ default['zabbix']['agent']['configure_options'] = ['--with-libcurl']
 default['zabbix']['agent']['config_file']               = ::File.join(node['zabbix']['etc_dir'], 'zabbix_agentd.conf')
 default['zabbix']['agent']['userparams_config_file']    = ::File.join(node['zabbix']['agent']['include'], 'user_params.conf')
 
-default['zabbix']['agent']['groups']            = ['chef-agent']
+default['zabbix']['agent']['groups']            = []
 
 case node['platform_family']
 when 'rhel', 'debian'
@@ -71,3 +71,5 @@ default['zabbix']['agent']['interfaces']         = ['zabbix_agent']
 default['zabbix']['agent']['jmx_port']           = '10052'
 default['zabbix']['agent']['zabbix_agent_port']  = '10050'
 default['zabbix']['agent']['snmp_port']          = '161'
+
+default['zabbix']['agent']['registration']      = false
