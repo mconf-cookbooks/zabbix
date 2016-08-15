@@ -30,6 +30,8 @@ default['zabbix']['agent']['server_active']             = []
 default['zabbix']['agent']['source_ip']                 = nil
 default['zabbix']['agent']['start_agents']              = nil
 default['zabbix']['agent']['timeout']                   = '3'
+default['zabbix']['agent']['tls_accept']                = 'unencrypted'
+default['zabbix']['agent']['tls_connect']               = 'unencrypted'
 default['zabbix']['agent']['unsafe_user_parameters']    = []
 default['zabbix']['agent']['user']                      = nil
 default['zabbix']['agent']['user_parameter']            = []
@@ -42,7 +44,7 @@ default['zabbix']['agent']['service_state']     = [:start, :enable]
 default['zabbix']['agent']['branch']            = 'ZABBIX%20Latest%20Stable'
 default['zabbix']['agent']['version']           = '3.0.0'
 default['zabbix']['agent']['source_url']        = nil
-default['zabbix']['agent']['configure_options'] = ['--with-libcurl']
+default['zabbix']['agent']['configure_options'] = ['--with-libcurl', '--with-openssl']
 
 default['zabbix']['agent']['config_file']               = ::File.join(node['zabbix']['etc_dir'], 'zabbix_agentd.conf')
 default['zabbix']['agent']['userparams_config_file']    = ::File.join(node['zabbix']['agent']['include'], 'user_params.conf')
@@ -52,7 +54,7 @@ default['zabbix']['agent']['groups']            = []
 case node['platform_family']
 when 'rhel', 'debian'
   default['zabbix']['agent']['init_style']      = 'sysvinit'
-  default['zabbix']['agent']['install_method']  = 'prebuild'
+  default['zabbix']['agent']['install_method']  = 'source'
   default['zabbix']['agent']['pid_file']        = ::File.join(node['zabbix']['run_dir'], 'zabbix_agentd.pid')
 
   default['zabbix']['agent']['user']            = 'zabbix'
