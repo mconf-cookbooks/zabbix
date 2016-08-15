@@ -200,6 +200,26 @@ StartVMwareCollectors=<%= node['zabbix']['server']['start_vmware_collectors'] %>
 Timeout=<%= node['zabbix']['server']['timeout'] %>
 <% end -%>
 
+<% if node['zabbix']['server']['timeout'] -%>
+Timeout=<%= node['zabbix']['server']['timeout'] %>
+<% end -%>
+
+<% if node['zabbix']['server']['tls_ca_file'] -%>
+TLSCAFile=<%= node['zabbix']['server']['tls_ca_file'] %>
+<% end -%>
+
+<% if node['zabbix']['server']['tls_cert_file'] -%>
+TLSCertFile=<%= node['zabbix']['server']['tls_cert_file'] %>
+<% end -%>
+
+<% if node['zabbix']['server']['tls_crl_file'] -%>
+TLSCRLFile=<%= node['zabbix']['server']['tls_crl_file'] %>
+<% end -%>
+
+<% if node['zabbix']['server']['tls_key_file'] -%>
+TLSKeyFile=<%= node['zabbix']['server']['tls_key_file'] %>
+<% end -%>
+
 <% if node['zabbix']['server']['tmp_dir'] -%>
 TmpDir=<%= node['zabbix']['server']['tmp_dir'] %>
 <% end -%>

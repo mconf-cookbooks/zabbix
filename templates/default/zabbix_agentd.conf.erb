@@ -123,6 +123,50 @@ StartAgents=<%= node['zabbix']['agent']['start_agents'] %>
 Timeout=<%= node['zabbix']['agent']['timeout'] %>
 <% end -%>
 
+<% if node['zabbix']['agent']['tls_accept'].respond_to?("each") -%>
+    <% if not node['zabbix']['agent']['tls_accept'].empty? -%>
+TLSAccept=<%= node['zabbix']['agent']['tls_accept'].join(',') %>
+    <% end -%>
+<% else -%>
+TLSAccept=<%= node['zabbix']['agent']['tls_accept'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_ca_file'] -%>
+TLSCAFile=<%= node['zabbix']['agent']['tls_ca_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_cert_file'] -%>
+TLSCertFile=<%= node['zabbix']['agent']['tls_cert_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_connect'] -%>
+TLSConnect=<%= node['zabbix']['agent']['tls_connect'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_crl_file'] -%>
+TLSCRLFile=<%= node['zabbix']['agent']['tls_crl_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_key_file'] -%>
+TLSKeyFile=<%= node['zabbix']['agent']['tls_key_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_psk_file'] -%>
+TLSPSKFile=<%= node['zabbix']['agent']['tls_psk_file'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_psk_identity'] -%>
+TLSPSKIdentity=<%= node['zabbix']['agent']['tls_psk_identity'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_server_cert_issuer'] -%>
+TLSServerCertIssuer=<%= node['zabbix']['agent']['tls_server_cert_issuer'] %>
+<% end -%>
+
+<% if node['zabbix']['agent']['tls_server_cert_subject'] -%>
+TLSServerCertSubject=<%= node['zabbix']['agent']['tls_server_cert_subject'] %>
+<% end -%>
+
 <% if node['zabbix']['agent']['unsafe_user_parameters'].respond_to?("each") -%>
     <% if not node['zabbix']['agent']['unsafe_user_parameters'].empty? -%>
 UnsafeUserParameters=<%= node['zabbix']['agent']['unsafe_user_parameters'].join(',') %>
