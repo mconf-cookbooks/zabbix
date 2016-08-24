@@ -195,6 +195,8 @@ action :update do
       :params => {
         :hostid => host['hostid'],
         :groups => desired_groups,
+        :tls_psk_identity => host["tls_psk_identity"],
+        :tls_psk => host["tls_psk"],
         :templates => desired_templates.flatten,
       }
     }
