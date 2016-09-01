@@ -150,3 +150,7 @@ end
 if node['zabbix']['server']['import_templates']
     include_recipe 'zabbix::import_templates'
 end
+
+if node['zabbix']['server']['import_mediatypes']
+    include_recipe 'zabbix::mediatype'
+end
