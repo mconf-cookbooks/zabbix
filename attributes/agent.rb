@@ -41,7 +41,7 @@ default['zabbix']['agent']['tls_psk_identity']          = nil
 default['zabbix']['agent']['tls_server_cert_issuer']    = nil
 default['zabbix']['agent']['tls_server_cert_subject']   = nil
 default['zabbix']['agent']['unsafe_user_parameters']    = []
-default['zabbix']['agent']['user']                      = nil
+default['zabbix']['agent']['user']                      = 'zabbix_agent'
 default['zabbix']['agent']['user_parameter']            = []
 
 # Installation options
@@ -65,8 +65,9 @@ when 'rhel', 'debian'
   default['zabbix']['agent']['install_method']  = 'source'
   default['zabbix']['agent']['pid_file']        = ::File.join(node['zabbix']['run_dir'], 'zabbix_agentd.pid')
 
-  default['zabbix']['agent']['user']            = 'zabbix'
-  default['zabbix']['agent']['group']           = node['zabbix']['agent']['user']
+  #default['zabbix']['agent']['user']            = 'zabbix'
+  #default['zabbix']['agent']['group']           = node['zabbix']['agent']['user']
+  default['zabbix']['agent']['group']           = 'zabbix'
 
   default['zabbix']['agent']['shell']           = node['zabbix']['shell']
 when 'windows'
