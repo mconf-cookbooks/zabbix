@@ -31,9 +31,9 @@ node['zabbix']['server']['mediatype_files'].each do |file|
     file = ::File.read(filepath)
     mediatype_data = JSON.parse(file)
 
-    zabbix_mediatype node['zabbix']['web']['fqdn'] do
+    zabbix_mediatype mediatype_data['description'] do
         server_connection connection_info
         params mediatype_data
-        action :create
+        action :create_or_update
     end
 end
