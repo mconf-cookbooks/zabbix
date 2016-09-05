@@ -102,7 +102,7 @@ Templates are not imported into server by default. It is necessary to set 'impor
 
 NOTE:
 
-If `certbot` cookbook is used to generate certificate, then node['zabbix']['web']['ssl']['certificate_file'] and node['certbot']['cert_path'] muste be the same. The same applies to node['zabbix']['web']['ssl']['certificate_key_file'] and node['certbot']['key_path'].
+If `certbot` cookbook is used to generate certificate, then `node['zabbix']['web']['ssl']['certificate_file']` and `node['certbot']['cert_path']` muste be the same. The same applies to `node['zabbix']['web']['ssl']['certificate_key_file']` and `node['certbot']['key_path']`.
 
 NOTE:
 
