@@ -1,11 +1,15 @@
-default['zabbix']['web']['login']           = 'admin'
-default['zabbix']['web']['password']        = 'zabbix'
-default['zabbix']['web']['install_method']  = 'apache'
-default['zabbix']['web']['fqdn']            = node['fqdn']
-default['zabbix']['web']['aliases']         = ['zabbix']
-default['zabbix']['web']['port']            = 80
-default['zabbix']['web']['install']         = false 
-default['apache']['mpm']                    = "prefork"
+default['zabbix']['web']['login']                       = 'admin'
+default['zabbix']['web']['password']                    = 'zabbix'
+default['zabbix']['web']['install_method']              = 'apache'
+default['zabbix']['web']['fqdn']                        = node['fqdn']
+default['zabbix']['web']['aliases']                     = ['zabbix']
+default['zabbix']['web']['port']                        = 80
+default['zabbix']['web']['install']                     = false
+default['zabbix']['web']['ssl']['enable']               = true
+default['zabbix']['web']['ssl']['port']                 = 443
+default['zabbix']['web']['ssl']['certificate_file']     = nil
+default['zabbix']['web']['ssl']['certificate_key_file'] = nil
+default['apache']['mpm']                                = "prefork"
 
 default['zabbix']['web']['php']['fastcgi_listen'] = '127.0.0.1:9000' # only applicable when using php-fpm (nginx)
 default['zabbix']['web']['php']['settings']    = {

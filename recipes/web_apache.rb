@@ -69,6 +69,12 @@ web_app node['zabbix']['web']['fqdn'] do
   docroot node['zabbix']['web_dir']
   not_if { node['zabbix']['web']['fqdn'].nil? }
   php_settings node['zabbix']['web']['php']['settings']
+  ssl_enable node['zabbix']['web']['ssl']['enable']
+  ssl_port node['zabbix']['web']['ssl']['port']
+  certificate_file node['zabbix']['web']['ssl']['certificate_file']
+  certificate_key_file node['zabbix']['web']['ssl']['certificate_key_file']
+  protocol node['zabbix']['web']['ssl']['enable'] ? "https" : "http"
+  template 'apache-site.conf.erb'
   notifies :restart, 'service[apache2]', :immediately
 end
 
@@ -83,4 +89,8 @@ template '/etc/php5/apache2/php.ini' do
   mode '644'
   variables(:dbsocket => node['zabbix']['database']['dbsocket'])
   notifies :restart, 'service[apache2]', :immediately
+end
+
+if node['zabbix']['web']['ssl']['enable']
+  include_recipe "apache2::mod_ssl"
 end
