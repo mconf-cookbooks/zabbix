@@ -34,6 +34,7 @@ node['zabbix']['server']['mediatype_files'].each do |file|
     zabbix_mediatype mediatype_data['description'] do
         server_connection connection_info
         params mediatype_data
+        retries node['zabbix']['web']['connection_retries']
         action :create_or_update
     end
 end

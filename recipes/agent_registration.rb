@@ -82,6 +82,7 @@ zabbix_host node['zabbix']['agent']['hostname'] do
     :templates => node['zabbix']['agent']['templates'],
     :interfaces => interface_data
   )
+  retries node['zabbix']['web']['connection_retries']
   action :nothing
 end
 

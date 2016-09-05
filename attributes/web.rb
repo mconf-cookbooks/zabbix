@@ -9,6 +9,7 @@ default['zabbix']['web']['ssl']['enable']               = true
 default['zabbix']['web']['ssl']['port']                 = 443
 default['zabbix']['web']['ssl']['certificate_file']     = nil
 default['zabbix']['web']['ssl']['certificate_key_file'] = nil
+default['zabbix']['web']['connection_retries']          = 1
 default['apache']['mpm']                                = "prefork"
 
 default['zabbix']['web']['php']['fastcgi_listen'] = '127.0.0.1:9000' # only applicable when using php-fpm (nginx)

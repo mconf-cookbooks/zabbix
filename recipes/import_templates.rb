@@ -32,6 +32,7 @@ node['zabbix']['server']['template_files'].each do |file|
     zabbix_configuration node['zabbix']['web']['fqdn'] do
       server_connection connection_info
       source configuration_data
+      retries node['zabbix']['web']['connection_retries']
       action :import
     end
 end
