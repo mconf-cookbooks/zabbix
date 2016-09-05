@@ -86,11 +86,23 @@ Other server's attributes that may be important are:
 
     node['zabbix']['server']['import_templates'] = true # It is set to false by default
     node['zabbix']['server']['template_files'] = ["template-mconf"]
+    node['zabbix']['server']['import_mediatypes'] = true # It is set to false by default
+    node['zabbix']['server']['mediatype_files'] = ["Amazon SES"]
     node['zabbix']['database']['dbpassword'] = "<my_password>"
+    node['zabbix']['web']['ssl']['enable'] = true # It is set to false by default
+
+If SSL is enabled on server's web frontend (connection via HTTPS protocol), then it's necessary to set certificate attributes:
+
+    node['zabbix']['web']['ssl']['certificate_file'] = "<path to Certificate (.crt) file>"
+    node['zabbix']['web']['ssl']['certificate_key_file'] = "<path to private key file>"
 
 NOTE:
 
 Templates are not imported into server by default. It is necessary to set 'import_templates' to true and specify the templates filenames (without extension) in 'template_files' attribute. The templates files must be located at 'files/default/' as .xml.
+
+NOTE:
+
+If `certbot` cookbook is used to generate certificate, then node['zabbix']['web']['ssl']['certificate_file'] and node['certbot']['cert_path'] muste be the same. The same applies to node['zabbix']['web']['ssl']['certificate_key_file'] and node['certbot']['key_path'].
 
 NOTE:
 
