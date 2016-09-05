@@ -10,6 +10,8 @@ default['zabbix']['web']['ssl']['port']                 = 443
 default['zabbix']['web']['ssl']['certificate_file']     = nil
 default['zabbix']['web']['ssl']['certificate_key_file'] = nil
 default['zabbix']['web']['connection_retries']          = 1
+default['zabbix']['web']['protocol']                    = node['zabbix']['web']['ssl']['enable'] ? 'https' : 'http'
+default['zabbix']['web']['url']                         = "#{node['zabbix']['web']['protocol']}://#{node['zabbix']['web']['fqdn']}/api_jsonrpc.php"
 default['apache']['mpm']                                = "prefork"
 
 default['zabbix']['web']['php']['fastcgi_listen'] = '127.0.0.1:9000' # only applicable when using php-fpm (nginx)
