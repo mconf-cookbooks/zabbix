@@ -1,0 +1,58 @@
+<% if @params[:ssl_enable] %>
+<VirtualHost *:<%= @params[:server_port] %>>
+  ServerName <%= @params[:server_name] %>
+  Redirect "/" "<%= @params[:protocol] %>://<%= @params[:server_name] %>/"
+
+  <%= render 'apache-site-log.erb' %>
+</VirtualHost>
+<% end %>
+
+<VirtualHost *:<%= @params[:ssl_enable] ? @params[:ssl_port] : @params[:server_port] %>>
+  ServerName <%= @params[:server_name] %>
+  ServerAlias <%= @params[:server_aliases].join(' ')%>
+  DocumentRoot <%= @params[:docroot] %>
+
+  <% if @params[:ssl_enable] %>
+  <%= render 'apache-site-ssl.erb' %>
+  <% end %>
+
+  <%= render 'apache-site-log.erb' %>
+  
+  <Directory <%= @params[:docroot] %>>
+    Options +FollowSymLinks
+    AllowOverride None
+    Order allow,deny
+    Allow from all
+    Require all granted
+    <% @params[:php_settings].each do |name, value| %>
+    php_admin_value <%=name%> <%=value%>
+    <%end%>
+  </Directory>
+  
+  <Directory />
+    Options FollowSymLinks
+    AllowOverride None
+  </Directory>
+
+  <Location /server-status>
+    SetHandler server-status
+
+    Order Deny,Allow
+    Deny from all
+    Allow from 127.0.0.1
+  </Location>
+
+  RewriteEngine On
+  # TODO: Update RewriteLog
+  #RewriteLog <%= node['apache']['log_dir'] %>/<%= @application_name %>-rewrite.log
+  #RewriteLogLevel 0
+
+  # Canonical host, <%= @params['server_name'] %>
+  RewriteCond %{HTTP_HOST}   !^<%= @params['server_name'] %> [NC]
+  RewriteCond %{HTTP_HOST}   !^$
+  RewriteRule ^/(.*)$        http://<%= @params['server_name'] %>/$1 [L,R=301]
+
+  RewriteCond %{DOCUMENT_ROOT}/system/maintenance.html -f
+  RewriteCond %{SCRIPT_FILENAME} !maintenance.html
+  RewriteRule ^.*$ /system/maintenance.html [L]
+</VirtualHost>
