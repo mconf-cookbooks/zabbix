@@ -73,6 +73,56 @@ interface_list.each do |interface|
   end
 end
 
+tls_connect_definitions = {
+  :unencrypted => 1,
+  :psk => 2,
+  :cert => 3
+}
+
+require 'set'
+
+tls_accept_definitions = {
+  [:unencrypted].to_set => 1,
+  [:psk].to_set => 2,
+  [:unencrypted, :psk].to_set => 3,
+  [:cert].to_set => 4,
+  [:unencrypted, :cert].to_set => 5,
+  [:psk, :cert].to_set => 6,
+  [:unencrypted, :psk, :cert].to_set => 7
+}
+
+if node['zabbix']['agent']['tls_connect'].nil?
+  tls_connect = tls_connect_definitions[:unencrypted]
+elsif tls_connect_definitions.key?(node['zabbix']['agent']['tls_connect'].to_sym)
+  tls_connect = tls_connect_definitions[node['zabbix']['agent']['tls_connect'].to_sym]
+else
+    Chef::Log.warn "WARNING: TLS connect #{node['zabbix']['agent']['tls_connect']} \
+    is not defined in agent_registration.rb"
+end
+
+if node['zabbix']['agent']['tls_accept'].nil?
+  tls_accept = tls_accept_definitions[[:unencrypted].to_set]
+else
+  tls_accept_set = if node['zabbix']['agent']['tls_accept'].respond_to?("map")
+                     node['zabbix']['agent']['tls_accept'].map(&:to_sym).to_set
+                   else
+                     Set.new [node['zabbix']['agent']['tls_accept'].to_sym] end
+
+  if tls_accept_definitions.key?(tls_accept_set)
+    tls_accept = tls_accept_definitions[tls_accept_set]
+  else
+    Chef::Log.warn "WARNING: Accept list #{node['zabbix']['agent']['tls_accept']} \
+    is not defined in agent_registration.rb"
+  end
+end
+
+
+tls_psk = if node['zabbix']['agent']['tls_psk_file'].nil? then ""
+              else ::File.read(node['zabbix']['agent']['tls_psk_file']).strip end
+tls_psk_identity = if node['zabbix']['agent']['tls_psk_identity'].nil? then ""
+                   else node['zabbix']['agent']['tls_psk_identity'] end
+
+
 zabbix_host node['zabbix']['agent']['hostname'] do
   create_missing_groups true
   server_connection connection_info
@@ -80,7 +130,11 @@ zabbix_host node['zabbix']['agent']['hostname'] do
     :host => node['hostname'],
     :groupNames => node['zabbix']['agent']['groups'],
     :templates => node['zabbix']['agent']['templates'],
-    :interfaces => interface_data
+    :interfaces => interface_data,
+    :tls_connect => tls_connect,
+    :tls_accept => tls_accept,
+    :tls_psk => tls_psk,
+    :tls_psk_identity => tls_psk_identity
   )
   retries node['zabbix']['web']['connection_retries']
   action :nothing
