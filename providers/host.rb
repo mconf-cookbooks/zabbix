@@ -113,7 +113,11 @@ action :create do
         :groups => groups,
         :templates => templates_to_send,
         :interfaces => interfaces.map(&:to_hash),
-        :macros => format_macros(new_resource.macros)
+        :macros => format_macros(new_resource.macros),
+        :tls_connect => new_resource.parameters[:tls_connect],
+        :tls_accept => new_resource.parameters[:tls_accept],
+        :tls_psk => new_resource.parameters[:tls_psk],
+        :tls_psk_identity => new_resource.parameters[:tls_psk_identity]
       }
     }
     Chef::Log.info 'Creating new Zabbix entry for this host'
@@ -123,6 +127,7 @@ action :create do
 end
 
 action :update do
+  Chef::Log.info 'Updating agent'
   Chef::Zabbix.with_connection(new_resource.server_connection) do |connection|
 
     get_host_request = {
@@ -195,11 +200,14 @@ action :update do
       :params => {
         :hostid => host['hostid'],
         :groups => desired_groups,
-        :tls_psk_identity => host["tls_psk_identity"],
-        :tls_psk => host["tls_psk"],
         :templates => desired_templates.flatten,
+        :tls_accept => new_resource.parameters[:tls_accept],
+        :tls_connect => new_resource.parameters[:tls_connect],
+        :tls_psk => new_resource.parameters[:tls_psk] || host['tls_psk'],
+        :tls_psk_identity => new_resource.parameters[:tls_psk_identity] || host['tls_psk_identity']
       }
     }
+    puts host_update_request.inspect
     connection.query(host_update_request)
 
     new_host_interfaces.each do |interface|
