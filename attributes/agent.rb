@@ -1,5 +1,6 @@
 # Load default.rb to use node['zabbix']['etc_dir']
 include_attribute 'zabbix'
+include_attribute 'zabbix::server'
 
 # Agent configuration for Zabbix 3.0.0
 
@@ -41,7 +42,7 @@ default['zabbix']['agent']['tls_psk_identity']          = nil
 default['zabbix']['agent']['tls_server_cert_issuer']    = nil
 default['zabbix']['agent']['tls_server_cert_subject']   = nil
 default['zabbix']['agent']['unsafe_user_parameters']    = []
-default['zabbix']['agent']['user']                      = 'zabbix_agent'
+default['zabbix']['agent']['user']                      = node['zabbix']['server']['install'] ? 'zabbix_agent' : 'zabbix'
 default['zabbix']['agent']['user_parameter']            = []
 
 # Installation options
