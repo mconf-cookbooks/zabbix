@@ -23,27 +23,6 @@ connection_info = {
   :password => zabbix_server['zabbix']['web']['password']
 }
 
-files_default = ::File.join(Chef::Config['file_cache_path'], 'cookbooks/zabbix/files/default/zabbix-mediatype')
-
-node['zabbix']['server']['mediatype_files'].each do |file|
-    require 'json'
-    filepath = ::File.join(files_default, file)
-	if ::File.exist?(filepath)
-    	file = ::File.read(filepath) 
-	else
-		Chef::Log.info('Mediatype file #{filepath} does not exist. Skipping.')
-		next
-	end
-    mediatype_data = JSON.parse(file)
-
-    zabbix_mediatype mediatype_data['description'] do
-        server_connection connection_info
-        params mediatype_data
-        retries node['zabbix']['web']['connection_retries']
-        action :create_or_update
-    end
-end
-
 tmp_mediatypes = "/tmp/zabbix_imports/mediatypes"
 
 directory tmp_mediatypes do
