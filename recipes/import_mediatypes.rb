@@ -43,3 +43,39 @@ node['zabbix']['server']['mediatype_files'].each do |file|
         action :create_or_update
     end
 end
+
+tmp_mediatypes = "/tmp/zabbix_imports/mediatypes"
+
+directory tmp_mediatypes do
+	owner node['zabbix']['login']
+	group node['zabbix']['group']
+	mode '0600'
+	recursive true
+end.run_action(:create)
+
+node['zabbix']['server']['mediatype_files'].each do |file|
+	tmp_path = ::File.join(tmp_mediatypes, file)
+
+	cookbook_file tmp_path do
+		source "zabbix-mediatypes/#{file}"
+		owner node['zabbix']['login']
+		group node['zabbix']['group']
+		mode '0400'
+	end.run_action(:create)
+
+	mediatype_data = JSON.parse(::File.read(tmp_path))
+	zabbix_mediatype mediatype_data['description'] do
+			server_connection connection_info
+			params mediatype_data
+			retries node['zabbix']['web']['connection_retries']
+			action :create_or_update
+	end
+end
+
+directory tmp_mediatypes do
+	owner node['zabbix']['login']
+	group node['zabbix']['group']
+	mode '0600'
+	recursive true
+	action :delete
+end

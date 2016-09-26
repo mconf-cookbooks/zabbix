@@ -152,5 +152,5 @@ if node['zabbix']['server']['import_templates']
 end
 
 if node['zabbix']['server']['import_mediatypes']
-    include_recipe 'zabbix::mediatype'
+    include_recipe 'zabbix::import_mediatypes'
 end
