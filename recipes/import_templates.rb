@@ -23,26 +23,18 @@ connection_info = {
   :password => zabbix_server['zabbix']['web']['password']
 }
 
-#files_default = ::File.join(Chef::Config['file_cache_path'], 'cookbooks/zabbix/files/default/zabbix-templates')
-#
-#node['zabbix']['server']['template_files'].each do |file|
-#    filepath = ::File.join(files_default, file)
-#	if ::File.exist?(filepath)
-#		configuration_data = ::File.read(filepath)
-#	else
-#		Chef::Log.info('Template file #{filepath} does not exist. Skipping.')
-#		next
-#	end
-#
-#    zabbix_configuration node['zabbix']['web']['fqdn'] do
-#      server_connection connection_info
-#      source configuration_data
-#      action :import
-#    end
-#end
+tmp_templates = "/tmp/zabbix_imports/templates"
 
-node['zabbix'['server']['template_files'].each do |file|
-	tmp_path = ::File.join('/tmp/zabbix/templates', file)
+directory tmp_templates do
+	owner node['zabbix']['login']
+	group node['zabbix']['group']
+	mode '0600'
+	recursive true
+end.run_action(:create)
+
+node['zabbix']['server']['template_files'].each do |file|
+	tmp_path = ::File.join(tmp_templates, file)
+
 	cookbook_file tmp_path do
 		source "zabbix-templates/#{file}"
 		owner node['zabbix']['login']
@@ -56,4 +48,12 @@ node['zabbix'['server']['template_files'].each do |file|
     source configuration_data
     action :import
 	end
+end
+
+directory tmp_templates do
+	owner node['zabbix']['login']
+	group node['zabbix']['group']
+	mode '0600'
+	recursive true
+	action :delete
 end

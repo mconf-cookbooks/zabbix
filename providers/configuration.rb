@@ -52,9 +52,6 @@ rules = {
     },
     :templateLinkage => {
           :createMissing => true,
-    },
-    :groups => {
-          :createMissing => true
     }
 }
 
