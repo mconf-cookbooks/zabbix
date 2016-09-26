@@ -23,7 +23,7 @@ connection_info = {
   :password => zabbix_server['zabbix']['web']['password']
 }
 
-tmp_mediatypes = "/tmp/zabbix_imports/mediatypes"
+tmp_mediatypes = ::File.join(node['zabbix']['imports_tmp_dir'], "mediatypes")
 
 directory tmp_mediatypes do
 	owner node['zabbix']['login']
@@ -51,7 +51,7 @@ node['zabbix']['server']['mediatype_files'].each do |file|
 	end
 end
 
-directory tmp_mediatypes do
+directory node['zabbix']['imports_tmp_dir'] do
 	owner node['zabbix']['login']
 	group node['zabbix']['group']
 	mode '0600'

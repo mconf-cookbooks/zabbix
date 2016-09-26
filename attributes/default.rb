@@ -21,6 +21,7 @@ default['zabbix']['lock_dir']     = '/var/lock/subsys'
 default['zabbix']['src_dir']      = '/opt'
 default['zabbix']['log_dir']      = '/var/log/zabbix'
 default['zabbix']['run_dir']      = '/var/run/zabbix'
+default['zabbix']['imports_tmp_dir'] = '/tmp/zabbix_imports'
 
 default['zabbix']['login']  = 'zabbix'
 default['zabbix']['group']  = 'zabbix'

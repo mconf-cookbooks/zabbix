@@ -23,7 +23,7 @@ connection_info = {
   :password => zabbix_server['zabbix']['web']['password']
 }
 
-tmp_templates = "/tmp/zabbix_imports/templates"
+tmp_templates = ::File.join(node['zabbix']['imports_tmp_dir'], "templates")
 
 directory tmp_templates do
 	owner node['zabbix']['login']
@@ -50,7 +50,7 @@ node['zabbix']['server']['template_files'].each do |file|
 	end
 end
 
-directory tmp_templates do
+directory node['zabbix']['imports_tmp_dir'] do
 	owner node['zabbix']['login']
 	group node['zabbix']['group']
 	mode '0600'
