@@ -23,11 +23,16 @@ connection_info = {
   :password => zabbix_server['zabbix']['web']['password']
 }
 
-files_default = ::File.join(Chef::Config['file_cache_path'], 'cookbooks/zabbix/files/default')
+files_default = ::File.join(Chef::Config['file_cache_path'], 'cookbooks/zabbix/files/default/zabbix-templates')
 
 node['zabbix']['server']['template_files'].each do |file|
     filepath = ::File.join(files_default, file)
-    configuration_data = ::File.read(filepath)
+	if ::File.exist?(filepath)
+		configuration_data = ::File.read(filepath)
+	else
+		Chef::Log.info('Template file #{filepath} does not exist. Skipping.')
+		next
+	end
 
     zabbix_configuration node['zabbix']['web']['fqdn'] do
       server_connection connection_info
