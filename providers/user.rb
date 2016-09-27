@@ -27,6 +27,7 @@ action :create do
     Chef::Application.fatal! "Please supply a password for creating this user: '#{new_resource.user_alias}'" if new_resource.password.nil? || new_resource.password.empty?
 
     groups = check_and_create_groups(new_resource, connection)
+		medias = replace_by_mediatypeids(new_resource, connection)
 
     request = {
       :method => 'user.create',
@@ -37,7 +38,7 @@ action :create do
         :name         => new_resource.first_name,
         :type         => new_resource.type,
         :usrgrps      => groups,
-        :user_medias  => new_resource.medias
+        :user_medias  => medias
       }
     }
     Chef::Log.info "Creating new user: '#{new_resource.user_alias}'"
@@ -157,6 +158,33 @@ def check_and_create_groups(new_resource, connection, extended_results = false)
     groups << evaluate_group_creation(group, current_user_group, connection, new_resource.create_missing_groups)
   end
   groups
+end
+
+def replace_by_mediatypeids(new_resource, connection)
+	medias = new_resource.medias
+	medias.each do |media|
+		next if media.key?('mediatypeid')
+    Chef::Application.fatal! "Media has neither mediatypeid nor description set" if not media.key?('description')
+		Chef::Log.info "Replacing mediatype description '#{media['description']}' by its mediatypeid"
+		get_mediatypes_request = {
+			:method => 'mediatype.get',
+			:params => {
+				:filter => {
+					:description => media['description']
+				},
+				:output => ['description', 'mediatypeid']
+			}
+		}
+		media_result = connection.query(get_mediatypes_request).first
+
+		if media_result.nil?
+			Chef::Application.fatal! "Media description '#{media['description']}' does not correspond to any mediatypeid"
+		end
+
+		media['mediatypeid'] = media_result['mediatypeid']
+		media.delete(:description)
+	end
+	medias
 end
 
 def evaluate_group_creation(current_user_group_from_get, current_user_group_from_resource, connection, create_missing_groups)
