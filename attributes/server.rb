@@ -78,4 +78,7 @@ default['zabbix']['server']['template_files'] = []
 default['zabbix']['server']['import_mediatypes'] = false
 default['zabbix']['server']['mediatype_files'] = []
 
+default['zabbix']['server']['import_users'] = false
+default['zabbix']['server']['user_files'] = []
+
 default['zabbix']['server']['install'] = false
