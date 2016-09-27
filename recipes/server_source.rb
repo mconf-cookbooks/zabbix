@@ -154,3 +154,7 @@ end
 if node['zabbix']['server']['import_mediatypes']
     include_recipe 'zabbix::import_mediatypes'
 end
+
+if node['zabbix']['server']['import_users']
+    include_recipe 'zabbix::import_users'
+end

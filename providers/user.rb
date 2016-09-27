@@ -4,18 +4,18 @@ action :create_or_update do
       :method => 'user.get',
       :params => {
         :filter => {
-          :alias => new_resource.alias
+          :alias => new_resource.user_alias
         }
       }
     }
     users = connection.query(get_user_request)
 
     if users.size == 0
-      Chef::Log.info "Proceeding to create this user on the Zabbix server: '#{new_resource.alias}'"
+      Chef::Log.info "Proceeding to create this user on the Zabbix server: '#{new_resource.user_alias}'"
       run_action :create
       new_resource.updated_by_last_action(true)
     else
-      Chef::Log.debug "Going to update this user: '#{new_resource.alias}'"
+      Chef::Log.debug "Going to update this user: '#{new_resource.user_alias}'"
       run_action :update
     end
   end
@@ -24,14 +24,14 @@ end
 action :create do
   Chef::Zabbix.with_connection(new_resource.server_connection) do |connection|
 
-    Chef::Application.fatal! "Please supply a password for creating this user: '#{new_resource.alias}'" if new_resource.password.nil? || new_resource.password.empty?
+    Chef::Application.fatal! "Please supply a password for creating this user: '#{new_resource.user_alias}'" if new_resource.password.nil? || new_resource.password.empty?
 
     groups = check_and_create_groups(new_resource, connection)
 
     request = {
       :method => 'user.create',
       :params => {
-        :alias        => new_resource.alias,
+        :alias        => new_resource.user_alias,
         :passwd       => new_resource.password,
         :surname      => new_resource.surname,
         :name         => new_resource.first_name,
@@ -40,7 +40,7 @@ action :create do
         :user_medias  => new_resource.medias
       }
     }
-    Chef::Log.info "Creating new user: '#{new_resource.alias}'"
+    Chef::Log.info "Creating new user: '#{new_resource.user_alias}'"
     connection.query(request)
   end
   new_resource.updated_by_last_action(true)
@@ -53,7 +53,7 @@ action :update do
       :method => 'user.get',
       :params => {
         :filter => {
-          :alias => new_resource.alias
+          :alias => new_resource.user_alias
         },
         :output => :extend,
         :selectUsrgrps => :shorten,
@@ -62,7 +62,7 @@ action :update do
     }
     user = connection.query(get_user_request).first
     if user.nil? || user.empty?
-      Chef::Application.fatal! "Could not find user for update: '#{new_resource.alias}'"
+      Chef::Application.fatal! "Could not find user for update: '#{new_resource.user_alias}'"
     end
 
     groups = check_and_create_groups(new_resource, connection, true)
@@ -72,7 +72,7 @@ action :update do
     groups.each do |group|
       need_to_update = true if user['usrgrps'].select { |usergrp| usergrp['usrgrpid'] == group['usrgrpid'] }.empty?
     end
-    { 'alias' => 'alias', 'first_name' => 'name', 'surname' => 'surname', 'type' => 'type', 'medias' => 'medias' }.each do |resource_attr_name, api_attr_name|
+    { 'user_alias' => 'alias', 'first_name' => 'name', 'surname' => 'surname', 'type' => 'type', 'medias' => 'medias' }.each do |resource_attr_name, api_attr_name|
       if resource_attr_name != 'type'
         need_to_update = true if user[api_attr_name] != new_resource.send(resource_attr_name)
       else
@@ -87,7 +87,7 @@ action :update do
         :method => 'user.update',
         :params => {
           :userid       => user['userid'],
-          :alias        => new_resource.alias,
+          :alias        => new_resource.user_alias,
           :passwd       => new_resource.password,
           :surname      => new_resource.surname,
           :name         => new_resource.first_name,
@@ -96,11 +96,11 @@ action :update do
           :user_medias  => new_resource.medias
         }
       }
-      Chef::Log.info "Updating user '#{new_resource.alias}'"
+      Chef::Log.info "Updating user '#{new_resource.user_alias}'"
       connection.query(user_update_request)
       new_resource.updated_by_last_action(true)
     else
-      Chef::Log.info "The attributes of user '#{new_resource.alias}' are already up-to-date, doing nothing"
+      Chef::Log.info "The attributes of user '#{new_resource.user_alias}' are already up-to-date, doing nothing"
     end
 
   end
@@ -113,13 +113,13 @@ action :delete do
       :method => 'user.get',
       :params => {
         :filter => {
-          :alias => new_resource.alias
+          :alias => new_resource.user_alias
         },
       }
     }
     user = connection.query(get_user_request).first
     if user.nil? || user.empty?
-      Chef::Application.fatal! "Could not find user for delete: '#{new_resource.alias}'"
+      Chef::Application.fatal! "Could not find user for delete: '#{new_resource.user_alias}'"
     end
 
     user_delete_request = {
@@ -128,9 +128,9 @@ action :delete do
         user['userid']
       ]
     }
-    Chef::Log.info "Deleting user '#{new_resource.alias}'"
+    Chef::Log.info "Deleting user '#{new_resource.user_alias}'"
     result = connection.query(user_delete_request)
-    Application.fatal! "Error deleting user '#{new_resource.alias}', see Chef errors" if result.nil? || result.empty? || result['userids'].nil? || result['userids'].empty? || !result['userids'].include?(user['userid'])
+    Application.fatal! "Error deleting user '#{new_resource.user_alias}', see Chef errors" if result.nil? || result.empty? || result['userids'].nil? || result['userids'].empty? || !result['userids'].include?(user['userid'])
     new_resource.updated_by_last_action(true)
   end
 end
@@ -177,6 +177,6 @@ def evaluate_group_creation(current_user_group_from_get, current_user_group_from
     Chef::Log.info "Group '#{current_user_group_from_resource}' already exists"
     current_user_group_from_get.first
   else
-    Chef::Application.fatal! "Could not find user group '#{current_user_group_from_resource}' for user '#{new_resource.alias}' and \"create_missing_groups\" is False (or unset)"
+    Chef::Application.fatal! "Could not find user group '#{current_user_group_from_resource}' for user '#{new_resource.user_alias}' and \"create_missing_groups\" is False (or unset)"
   end
 end

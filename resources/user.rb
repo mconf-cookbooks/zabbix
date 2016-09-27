@@ -1,7 +1,7 @@
 actions :create_or_update, :create, :update, :delete
 default_action :create_or_update
 
-attribute :alias, :kind_of => String, :name_attribute => true, :required => true
+attribute :user_alias, :kind_of => String, :name_attribute => true, :required => true
 attribute :password, :kind_of => String
 
 attribute :first_name, :kind_of => String
