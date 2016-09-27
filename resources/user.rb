@@ -7,7 +7,7 @@ attribute :password, :kind_of => String
 attribute :first_name, :kind_of => String
 attribute :surname, :kind_of => String
 
-attribute :type, :kind_of => Integer, :default => 1
+attribute :type, :kind_of => Integer, :default => nil
 
 # This accepting an Array of Strings as the names of the user_groups to add
 # the user to them
