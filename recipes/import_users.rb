@@ -18,7 +18,7 @@ else
 end
 
 connection_info = {
-  :url => "http://#{zabbix_server['zabbix']['web']['fqdn']}/api_jsonrpc.php",
+  :url => node['zabbix']['web']['url'],
   :user => zabbix_server['zabbix']['web']['login'],
   :password => zabbix_server['zabbix']['web']['password']
 }
