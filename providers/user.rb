@@ -83,20 +83,21 @@ action :update do
 
     need_to_update = true if new_resource.force_update
 
+		params = {}
+		params[:userid] = user['userid']
+		params[:alias] = new_resource.user_alias unless new_resource.user_alias.nil?
+		params[:passwd] = new_resource.password unless new_resource.password.nil?
+		params[:name] = new_resource.first_name unless new_resource.first_name.nil?
+		params[:surname] = new_resource.surname unless new_resource.surname.nil?
+		params[:type] = new_resource.type unless new_resource.type.nil?
+		params[:usrgrps] = groups unless groups.empty?
+		params[:user_medias] = new_resource.medias unless new_resource.medias.empty?
+
     if need_to_update
       user_update_request = {
         :method => 'user.update',
-        :params => {
-          :userid       => user['userid'],
-          :alias        => new_resource.user_alias,
-          :passwd       => new_resource.password,
-          :surname      => new_resource.surname,
-          :name         => new_resource.first_name,
-          :type         => new_resource.type,
-          :usrgrps      => groups,
-          :user_medias  => new_resource.medias
-        }
-      }
+        :params => params
+			}
       Chef::Log.info "Updating user '#{new_resource.user_alias}'"
       connection.query(user_update_request)
       new_resource.updated_by_last_action(true)
