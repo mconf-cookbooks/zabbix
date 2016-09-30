@@ -178,11 +178,3 @@ UnsafeUserParameters=<%= node['zabbix']['agent']['unsafe_user_parameters'] %>
 <% if node['zabbix']['agent']['user'] -%>
 User=<%= node['zabbix']['agent']['user'] %>
 <% end -%>
-
-<% if node['zabbix']['agent']['user_parameter'].respond_to?("each") -%>
-    <% if not node['zabbix']['agent']['user_parameter'].empty? -%>
-UnsafeUserParameters=<%= node['zabbix']['agent']['user_parameter'].join(',') %>
-    <% end -%>
-<% else -%>
-UnsafeUserParameters=<%= node['zabbix']['agent']['user_parameter'] %>
-<% end -%>

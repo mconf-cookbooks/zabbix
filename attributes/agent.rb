@@ -57,6 +57,7 @@ default['zabbix']['agent']['configure_options'] = ['--with-libcurl', '--with-ope
 
 default['zabbix']['agent']['config_file']               = ::File.join(node['zabbix']['etc_dir'], 'zabbix_agentd.conf')
 default['zabbix']['agent']['userparams_config_file']    = ::File.join(node['zabbix']['agent']['include'], 'user_params.conf')
+default['zabbix']['agent']['userparams_scripts_dir']    = ::File.join(node['zabbix']['etc_dir'], 'scripts')
 
 default['zabbix']['agent']['groups']            = []
 
