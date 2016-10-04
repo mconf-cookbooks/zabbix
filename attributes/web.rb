@@ -21,7 +21,7 @@ default['zabbix']['web']['php']['settings']    = {
   'upload_max_filesize' => '16M',
   'max_execution_time'  => '600',
   'max_input_time'      => '600',
-  'date.timezone'       => "'UTC'",
+  'date.timezone'       => "'America/Sao_Paulo'",
 }
 
 default['zabbix']['web']['packages'] = value_for_platform_family(
