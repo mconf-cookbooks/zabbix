@@ -22,26 +22,26 @@ end
 
 # Copy scripts and userparams.conf to node
 remote_directory '/etc/zabbix/scripts' do
-	source 'zabbix-scripts'
-	owner 'root'
-	group 'root'
-	mode '0755'
+  source 'zabbix-scripts'
+  owner 'root'
+  group 'root'
+  mode '0755'
   ignore_failure true
-	notifies :restart, 'service[zabbix_agentd]'
+  notifies :restart, 'service[zabbix_agentd]'
 end
 
 # Set UserParameters from userparams.conf file
 ruby_block 'set_userparams' do
-	block do
+  block do
     userparams_conf = ::File.join(node['zabbix']['agent']['userparams_scripts_dir'], 'userparams.conf')
-		if node['zabbix']['agent']['user_parameter'].empty? and
+    if node['zabbix']['agent']['user_parameter'].empty? and
       ::File.exist?(userparams_conf)
-			::File.open(userparams_conf).each_line do |line|
-				node.default['zabbix']['agent']['user_parameter'] << line
-			end
-		end
-	end
-	action :run
+      ::File.open(userparams_conf).each_line do |line|
+        node.default['zabbix']['agent']['user_parameter'] << line
+      end
+    end
+  end
+  action :run
 end
 
 # Install configuration
@@ -70,7 +70,7 @@ template 'user_params.conf' do
 end
 
 if node['zabbix']['agent']['registration']
-    include_recipe 'zabbix::agent_registration'
+  include_recipe 'zabbix::agent_registration'
 end
 
 ruby_block 'start service' do
