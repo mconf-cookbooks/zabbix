@@ -21,20 +21,21 @@ if node['zabbix']['agent']['tls_accept'].include?('psk') or
 end
 
 # Copy scripts and userparams.conf to node
-#remote_directory node['zabbix']['agent']['userparams_scripts_dir'] do
 remote_directory '/etc/zabbix/scripts' do
 	source 'zabbix-scripts'
 	owner 'root'
 	group 'root'
 	mode '0755'
+  ignore_failure true
 	notifies :restart, 'service[zabbix_agentd]'
 end
 
 # Set UserParameters from userparams.conf file
 ruby_block 'set_userparams' do
 	block do
-		if node['zabbix']['agent']['user_parameter'].empty?
-			userparams_conf = ::File.join(node['zabbix']['agent']['userparams_scripts_dir'], 'userparams.conf')
+    userparams_conf = ::File.join(node['zabbix']['agent']['userparams_scripts_dir'], 'userparams.conf')
+		if node['zabbix']['agent']['user_parameter'].empty? and
+      ::File.exist?(userparams_conf)
 			::File.open(userparams_conf).each_line do |line|
 				node.default['zabbix']['agent']['user_parameter'] << line
 			end
