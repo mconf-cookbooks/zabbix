@@ -1,54 +1,54 @@
 rules = {
     :applications => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :discoveryRules => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :graphs => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :groups => {
           :createMissing => true,
     },
     :hosts => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :images => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :items => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :maps => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :screens => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :templateScreens => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :triggers => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :valueMaps => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :templates => {
           :createMissing => true,
-          :updateMissing => true
+          :updateExisting => true
     },
     :templateLinkage => {
           :createMissing => true,
