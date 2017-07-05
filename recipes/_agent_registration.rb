@@ -1,6 +1,6 @@
 # Author:: Guilhem Lettron (<guilhem.lettron@youscribe.com>)
 # Cookbook Name:: zabbix
-# Recipe:: agent_registration
+# Recipe:: _agent_registration
 #
 # Apache 2.0
 #
@@ -29,9 +29,9 @@ if node['zabbix']['agent']['network_interface']
   target_interface = node['zabbix']['agent']['network_interface']
   if node['network']['interfaces'][target_interface]
     ip_address = node['network']['interfaces'][target_interface]['addresses'].keys[1]
-    Chef::Log.debug "zabbix::agent_registration : Using ip address of #{ip_address} for host"
+    Chef::Log.debug "zabbix::_agent_registration : Using ip address of #{ip_address} for host"
   else
-    Chef::Log.warn "zabbix::agent_registration : Could not find interface address for #{target_interface}, falling back to default"
+    Chef::Log.warn "zabbix::_agent_registration : Could not find interface address for #{target_interface}, falling back to default"
   end
 end
 
@@ -69,7 +69,7 @@ interface_list.each do |interface|
   if interface_definitions.key?(interface.to_sym)
     interface_data.push(interface_definitions[interface.to_sym])
   else
-    Chef::Log.warn "WARNING: Interface #{interface} is not defined in agent_registration.rb"
+    Chef::Log.warn "WARNING: Interface #{interface} is not defined in _agent_registration.rb"
   end
 end
 
@@ -97,7 +97,7 @@ elsif tls_connect_definitions.key?(node['zabbix']['agent']['tls_connect'].to_sym
   tls_connect = tls_connect_definitions[node['zabbix']['agent']['tls_connect'].to_sym]
 else
     Chef::Log.warn "WARNING: TLS connect #{node['zabbix']['agent']['tls_connect']} \
-    is not defined in agent_registration.rb"
+    is not defined in _agent_registration.rb"
 end
 
 if node['zabbix']['agent']['tls_accept'].nil?
@@ -112,7 +112,7 @@ else
     tls_accept = tls_accept_definitions[tls_accept_set]
   else
     Chef::Log.warn "WARNING: Accept list #{node['zabbix']['agent']['tls_accept']} \
-    is not defined in agent_registration.rb"
+    is not defined in _agent_registration.rb"
   end
 end
 
