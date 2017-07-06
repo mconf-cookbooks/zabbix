@@ -5,7 +5,7 @@ include_recipe 'zabbix::agent_common'
 include_recipe 'zabbix::_agent_security'
 
 # Install configuration.
-template 'zabbix_agentd_iter.conf' do
+template 'zabbix_agentd.conf' do
   path node['zabbix']['agent']['config_file']
   source 'zabbix_agentd.conf.erb'
   unless node['platform_family'] == 'windows'
@@ -18,7 +18,7 @@ end
 
 # Copy scripts from files/default to scripts/.
 remote_directory node['zabbix']['agent']['scripts_dir'] do
-  source 'zabbix-scripts'
+  source 'agent/agent_scripts'
   owner 'root'
   group 'root'
   mode '0755'
@@ -28,7 +28,7 @@ end
 
 # Copy userparameters from files/default to agent_include/.
 remote_directory node['zabbix']['agent']['include_dir'] do
-  source 'agent_include'
+  source 'agent/agent_include'
   owner 'root'
   group 'root'
   mode '0755'
@@ -37,8 +37,8 @@ remote_directory node['zabbix']['agent']['include_dir'] do
 end
 
 # Register the agent to the server.
-# TODO: Caution with idempotence.
-if node['zabbix']['agent']['registration']
+# TODO: Caution with idempotence. It should register only once.
+if node['zabbix']['agent']['register']['enabled']
   include_recipe 'zabbix::_agent_registration'
 end
 

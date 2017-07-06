@@ -5,23 +5,12 @@
 # Apache 2.0
 #
 
-if !Chef::Config[:solo]
-  zabbix_server = search(:node, 'recipe:zabbix\\:\\:server').first
-  zabbix_server = node
-else
-  if node['zabbix']['web']['fqdn']
-    zabbix_server = node
-  else
-    Chef::Log.warn('This recipe uses search. Chef Solo does not support search.')
-    Chef::Log.warn("If you did not set node['zabbix']['web']['fqdn'], the recipe will fail")
-    return
-  end
-end
+zabbix_web = node['zabbix']['agent']['register']
 
 connection_info = {
-  :url => node['zabbix']['web']['url'],
-  :user => zabbix_server['zabbix']['web']['login'],
-  :password => zabbix_server['zabbix']['web']['password']
+  :url => zabbix_web['url'],
+  :user => zabbix_web['login'],
+  :password => zabbix_web['password']
 }
 
 ip_address = node['ipaddress']
@@ -145,7 +134,7 @@ zabbix_host node['zabbix']['agent']['hostname'] do
     :tls_psk => tls_psk,
     :tls_psk_identity => tls_psk_identity
   )
-  retries node['zabbix']['web']['connection_retries']
+  retries zabbix_web['connection_retries']
   action :nothing
 end
 
