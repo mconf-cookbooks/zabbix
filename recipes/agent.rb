@@ -5,7 +5,7 @@ include_recipe 'zabbix::agent_common'
 include_recipe 'zabbix::_agent_security'
 
 # Install configuration.
-template 'zabbix_agentd.conf' do
+template 'zabbix_agentd_iter.conf' do
   path node['zabbix']['agent']['config_file']
   source 'zabbix_agentd.conf.erb'
   unless node['platform_family'] == 'windows'

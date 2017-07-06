@@ -91,36 +91,45 @@ tls_accept_definitions = {
   [:unencrypted, :psk, :cert].to_set => 7
 }
 
-if node['zabbix']['agent']['tls_connect'].nil?
+if node['zabbix']['agent']['configurations']['TLSConnect'].nil?
   tls_connect = tls_connect_definitions[:unencrypted]
-elsif tls_connect_definitions.key?(node['zabbix']['agent']['tls_connect'].to_sym)
-  tls_connect = tls_connect_definitions[node['zabbix']['agent']['tls_connect'].to_sym]
+elsif tls_connect_definitions.key?(node['zabbix']['agent']['configurations']['TLSConnect'].to_sym)
+  tls_connect = tls_connect_definitions[node['zabbix']['agent']['configurations']['TLSConnect'].to_sym]
 else
-    Chef::Log.warn "WARNING: TLS connect #{node['zabbix']['agent']['tls_connect']} \
+    Chef::Log.warn "WARNING: TLS connect #{node['zabbix']['agent']['configurations']['TLSConnect']} \
     is not defined in _agent_registration.rb"
 end
 
-if node['zabbix']['agent']['tls_accept'].nil?
+if node['zabbix']['agent']['configurations']['TLSAccept'].nil?
   tls_accept = tls_accept_definitions[[:unencrypted].to_set]
 else
-  tls_accept_set = if node['zabbix']['agent']['tls_accept'].respond_to?("map")
-                     node['zabbix']['agent']['tls_accept'].map(&:to_sym).to_set
+  # TODO: TLSAccept should support multiple values.
+  tls_accept_set = if node['zabbix']['agent']['configurations']['TLSAccept'].respond_to?("map")
+                     node['zabbix']['agent']['configurations']['TLSAccept'].map(&:to_sym).to_set
                    else
-                     Set.new [node['zabbix']['agent']['tls_accept'].to_sym] end
+                     Set.new [node['zabbix']['agent']['configurations']['TLSAccept'].to_sym]
+                   end
 
   if tls_accept_definitions.key?(tls_accept_set)
     tls_accept = tls_accept_definitions[tls_accept_set]
   else
-    Chef::Log.warn "WARNING: Accept list #{node['zabbix']['agent']['tls_accept']} \
+    Chef::Log.warn "WARNING: Accept list #{node['zabbix']['agent']['configurations']['TLSAccept']} \
     is not defined in _agent_registration.rb"
   end
 end
 
 
-tls_psk = if node['zabbix']['agent']['tls_psk_file'].nil? then ""
-              else ::File.read(node['zabbix']['agent']['tls_psk_file']).strip end
-tls_psk_identity = if node['zabbix']['agent']['tls_psk_identity'].nil? then ""
-                   else node['zabbix']['agent']['tls_psk_identity'] end
+tls_psk = if node['zabbix']['agent']['configurations']['TLSPSKFile'].nil?
+            ""
+          else
+            ::File.read(node['zabbix']['agent']['configurations']['TLSPSKFile']).strip
+          end
+
+tls_psk_identity = if node['zabbix']['agent']['configurations']['TLSPSKIdentity'].nil?
+                     ""
+                   else
+                     node['zabbix']['agent']['configurations']['TLSPSKIdentity']
+                   end
 
 
 zabbix_host node['zabbix']['agent']['hostname'] do
