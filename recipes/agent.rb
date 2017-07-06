@@ -1,7 +1,6 @@
 include_recipe "zabbix::agent_#{node['zabbix']['agent']['install_method']}"
 include_recipe 'zabbix::agent_common'
 
-# TODO: New parameters format.
 # Install TLS security to be used when communicating with Zabbix server.
 include_recipe 'zabbix::_agent_security'
 
