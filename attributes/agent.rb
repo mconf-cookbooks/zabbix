@@ -26,7 +26,7 @@ when 'rhel', 'debian'
   default['zabbix']['agent']['install_method']  = 'source'
   default['zabbix']['agent']['pid_file']        = ::File.join(node['zabbix']['run_dir'], 'zabbix_agentd.pid')
 
-  default['zabbix']['agent']['user']            = 'zabbix'
+  default['zabbix']['agent']['user']            = node['zabbix']['server']['install'] ? 'zabbix_agent' : 'zabbix'
   default['zabbix']['agent']['group']           = 'zabbix'
 
   default['zabbix']['agent']['shell']           = node['zabbix']['shell']
@@ -59,5 +59,5 @@ default['zabbix']['agent']['configurations']['Include']    = ::File.join(node['z
 default['zabbix']['agent']['configurations']['ListenPort'] = '10050'
 default['zabbix']['agent']['configurations']['LogFile']    = '/tmp/zabbix_agentd.log'
 default['zabbix']['agent']['configurations']['Timeout']    = '3'
-default['zabbix']['agent']['configurations']['User']       = node['zabbix']['server']['install'] ? 'zabbix_agent' : 'zabbix'
+default['zabbix']['agent']['configurations']['User']       = node['zabbix']['agent']['user']
 default['zabbix']['agent']['configurations']['PidFile']    = node['zabbix']['agent']['pid_file']
