@@ -26,9 +26,9 @@ remote_directory node['zabbix']['agent']['scripts_dir'] do
   notifies :restart, 'service[zabbix_agentd]'
 end
 
-# Copy userparameters from files/default to agent_include/.
+# Copy userparameters from files/default to include/.
 remote_directory node['zabbix']['agent']['include_dir'] do
-  source 'agent/agent_include'
+  source 'agent/include'
   owner 'root'
   group 'root'
   mode '0755'

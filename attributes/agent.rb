@@ -15,8 +15,8 @@ default['zabbix']['agent']['source_url']        = nil
 default['zabbix']['agent']['configure_options'] = ['--with-libcurl', '--with-openssl']
 
 default['zabbix']['agent']['config_file']    = ::File.join(node['zabbix']['etc_dir'], 'zabbix_agentd.conf')
-default['zabbix']['agent']['scripts_dir']    = ::File.join(node['zabbix']['etc_dir'], 'agent_scripts')
-default['zabbix']['agent']['include_dir']    = ::File.join(node['zabbix']['etc_dir'], 'agent_include')
+default['zabbix']['agent']['scripts_dir']    = ::File.join(node['zabbix']['etc_dir'], 'scripts')
+default['zabbix']['agent']['include_dir']    = ::File.join(node['zabbix']['etc_dir'], 'include')
 
 default['zabbix']['agent']['groups']            = []
 
@@ -55,7 +55,7 @@ default['zabbix']['agent']['register']['connection_retries'] = 3
 # Default parameters.
 
 default['zabbix']['agent']['configurations']['Hostname']   = node['fqdn']
-default['zabbix']['agent']['configurations']['Include']    = ::File.join(node['zabbix']['etc_dir'], 'agent_include')
+default['zabbix']['agent']['configurations']['Include']    = ::File.join(node['zabbix']['etc_dir'], 'include')
 default['zabbix']['agent']['configurations']['ListenPort'] = '10050'
 default['zabbix']['agent']['configurations']['LogFile']    = '/tmp/zabbix_agentd.log'
 default['zabbix']['agent']['configurations']['Timeout']    = '3'
