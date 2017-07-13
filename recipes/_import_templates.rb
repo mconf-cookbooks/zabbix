@@ -30,19 +30,16 @@ remote_directory tmp_templates do
   owner node['zabbix']['login']
   group node['zabbix']['group']
   mode '0644'
-  #files_owner node['zabbix']['login']
-  #files_group node['zabbix']['group']
-  #files_mode '0444'
   recursive true
   action :create
 end
 
 ruby_block 'import_templates' do
   block do
-    ::Dir.foreach(tmp_templates) do |item|
+    ::Dir::glob(::File.join(tmp_templates, "*")).sort.each do |item|
       if ::File.extname(item) == ".xml"
-        item_path = ::File.join(tmp_templates, item)
-        configuration_data = ::File.read(item_path)
+        Chef::Log.info("Importing template #{item}")
+        configuration_data = ::File.read(item)
 
         config = Chef::Resource::ZabbixConfiguration.new(node['zabbix']['web']['fqdn'], run_context)
 
