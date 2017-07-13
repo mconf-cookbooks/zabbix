@@ -146,15 +146,3 @@ end
 if node['zabbix']['web']['install']
     include_recipe 'zabbix::web'
 end
-
-if node['zabbix']['server']['import_templates']
-    include_recipe 'zabbix::import_templates'
-end
-
-if node['zabbix']['server']['import_mediatypes']
-    include_recipe 'zabbix::import_mediatypes'
-end
-
-if node['zabbix']['server']['import_users']
-    include_recipe 'zabbix::import_users'
-end

@@ -8,3 +8,7 @@
 #
 
 include_recipe "zabbix::server_#{node['zabbix']['server']['install_method']}"
+
+include_recipe 'zabbix::_import_templates'
+include_recipe 'zabbix::_import_mediatypes'
+include_recipe 'zabbix::_import_users'
