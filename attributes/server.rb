@@ -62,7 +62,7 @@ default['zabbix']['server']['vmware_timeout']               = nil
 
 # Installation options
 
-default['zabbix']['server']['version']                = '3.0.0'
+default['zabbix']['server']['version']                = '3.2.0'
 default['zabbix']['server']['branch']                 = 'ZABBIX%20Latest%20Stable'
 default['zabbix']['server']['source_url']             = nil
 default['zabbix']['server']['install_method']         = 'source'
