@@ -16,7 +16,11 @@ when 'ubuntu', 'debian'
   packages = %w(fping libcurl4-openssl-dev libiksemel-utils libiksemel-dev libiksemel3 libsnmp-dev snmp php-pear)
   case node['zabbix']['database']['install_method']
   when 'mysql', 'rds_mysql'
-    packages.push('libmysql++-dev', 'libmysql++3', 'libcurl3', 'php5-mysql', 'php5-gd')
+    if node['platform_version'] == '16.04'
+      packages.push('libmysql++-dev', 'libmysql++3', 'libcurl3', 'php-mysql', 'php-gd')
+    else
+      packages.push('libmysql++-dev', 'libmysql++3', 'libcurl3', 'php5-mysql', 'php5-gd')
+    end
   when 'postgres'
     packages.push('libssh2-1-dev')
   # Oracle oci8 PECL package installed below
