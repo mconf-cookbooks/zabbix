@@ -26,8 +26,6 @@ node['zabbix']['web']['packages'].each do |pkg|
   end
 end
 
-package 'libapache2-mod-php5' if platform_family?('debian')
-
 zabbix_source 'extract_zabbix_web' do
   branch node['zabbix']['server']['branch']
   version node['zabbix']['server']['version']
@@ -82,7 +80,14 @@ apache_site '000-default' do
   enable false
 end
 
-template '/etc/php5/apache2/php.ini' do
+php_ini_filepath = if node['platform_version'].to_f < 16 then
+                     '/etc/php5/apache2/php.ini'
+                   else
+                     '/etc/php/7.0/apache2/php.ini'
+                   end
+
+
+template php_ini_filepath do
   source 'zabbix_web.php.ini.erb'
   owner 'root'
   group 'root'

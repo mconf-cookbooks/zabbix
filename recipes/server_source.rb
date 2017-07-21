@@ -17,7 +17,7 @@ when 'ubuntu', 'debian'
   case node['zabbix']['database']['install_method']
   when 'mysql', 'rds_mysql'
     if node['platform_version'] == '16.04'
-      packages.push('libmysql++-dev', 'libmysql++3', 'libcurl3', 'php-mysql', 'php-gd')
+      packages.push('libmysql++-dev', 'libmysql++3v5', 'libcurl3', 'php-mysql', 'php-gd')
     else
       packages.push('libmysql++-dev', 'libmysql++3', 'libcurl3', 'php5-mysql', 'php5-gd')
     end

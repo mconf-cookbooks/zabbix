@@ -27,10 +27,10 @@ default['zabbix']['web']['php']['settings']    = {
 default['zabbix']['web']['packages'] = value_for_platform_family(
   'debian' =>
     if node['platform_version'].to_f < 16.0
-      %w(php5-mysql php5-gd libapache2-mod-php5 apache2-mpm-prefork),
+      %w(php5-mysql php5-gd libapache2-mod-php5 apache2-mpm-prefork)
     else
-      %w(php-mysql php-gd libapache2-mod-php apache2-mpm-prefork7.0),
-    end
+      %w(php-mysql php-gd libapache2-mod-php7.0)
+    end,
   'rhel' =>
     if node['platform_version'].to_f < 6.0
       %w(php53-mysql php53-gd php53-bcmath php53-mbstring)
