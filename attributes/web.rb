@@ -29,7 +29,7 @@ default['zabbix']['web']['packages'] = value_for_platform_family(
     if node['platform_version'].to_f < 16.0
       %w(php5-mysql php5-gd libapache2-mod-php5 apache2-mpm-prefork)
     else
-      %w(php-mysql php-gd libapache2-mod-php7.0)
+      %w(php-mysql php-gd libapache2-mod-php7.0 php7.0-mbstring php-bcmath)
     end,
   'rhel' =>
     if node['platform_version'].to_f < 6.0
