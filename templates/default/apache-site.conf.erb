@@ -6,18 +6,14 @@
   <%= render 'apache-site-log.erb' %>
 </VirtualHost>
 <% end %>
-
 <VirtualHost *:<%= @params[:ssl_enable] ? @params[:ssl_port] : @params[:server_port] %>>
   ServerName <%= @params[:server_name] %>
   ServerAlias <%= @params[:server_aliases].join(' ')%>
   DocumentRoot <%= @params[:docroot] %>
-
   <% if @params[:ssl_enable] %>
   <%= render 'apache-site-ssl.erb' %>
   <% end %>
-
   <%= render 'apache-site-log.erb' %>
-  
   <Directory <%= @params[:docroot] %>>
     Options +FollowSymLinks
     AllowOverride None
@@ -28,7 +24,7 @@
     php_admin_value <%=name%> <%=value%>
     <%end%>
   </Directory>
-  
+
   <Directory />
     Options FollowSymLinks
     AllowOverride None
