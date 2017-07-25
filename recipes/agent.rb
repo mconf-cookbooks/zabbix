@@ -4,15 +4,19 @@ include_recipe 'zabbix::agent_common'
 # Install TLS security to be used when communicating with Zabbix server.
 include_recipe 'zabbix::_agent_security'
 
-# Install configuration.
-template 'zabbix_agentd.conf' do
-  path node['zabbix']['agent']['config_file']
-  source 'zabbix_agentd.conf.erb'
+# Install Zabbix agent configuration file.
+template node['zabbix']['agent']['config_file'] do
+  source 'zabbix.conf.erb'
   unless node['platform_family'] == 'windows'
     owner 'root'
     group 'root'
     mode '644'
   end
+  variables(
+    :component => "agent",
+    :version => node['zabbix']['agent']['version'],
+    :configurations => node['zabbix']['agent']['configurations']
+  )
   notifies :restart, 'service[zabbix_agentd]'
 end
 
