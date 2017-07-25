@@ -127,12 +127,17 @@ template '/etc/init.d/zabbix_server' do
   notifies :restart, 'service[zabbix_server]', :delayed
 end
 
-# install zabbix server conf
+# Install Zabbix server configuration file.
 template "#{node['zabbix']['etc_dir']}/zabbix_server.conf" do
-  source 'zabbix_server.conf.erb'
+  source 'zabbix.conf.erb'
   owner 'root'
   group 'root'
   mode '644'
+  variables(
+    :component => "server",
+    :version => node['zabbix']['server']['version'],
+    :configurations => node['zabbix']['server']['configurations']
+  )
   notifies :restart, 'service[zabbix_server]', :delayed
 end
 
