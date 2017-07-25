@@ -1,18 +1,19 @@
+# Agent configuration for Zabbix 3.0.0
+
 # Load default.rb to use node['zabbix']['etc_dir']
 include_attribute 'zabbix'
 include_attribute 'zabbix::server'
 
-# Agent configuration for Zabbix 3.0.0
-
-# Installation options
+# Installation settings.
 
 default['zabbix']['agent']['install']           = true
-default['zabbix']['agent']['service_state']     = [:start, :enable]
-
 default['zabbix']['agent']['branch']            = 'ZABBIX%20Latest%20Stable'
 default['zabbix']['agent']['version']           = '3.0.0'
 default['zabbix']['agent']['source_url']        = nil
 default['zabbix']['agent']['configure_options'] = ['--with-libcurl', '--with-openssl']
+default['zabbix']['agent']['service_state']     = [:start, :enable]
+
+# Directory settings.
 
 default['zabbix']['agent']['config_file']    = ::File.join(node['zabbix']['etc_dir'], 'zabbix_agentd.conf')
 default['zabbix']['agent']['scripts_dir']    = ::File.join(node['zabbix']['etc_dir'], 'scripts')
