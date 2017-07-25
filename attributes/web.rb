@@ -1,3 +1,5 @@
+# Web interface settings.
+
 default['zabbix']['web']['login']                       = 'admin'
 default['zabbix']['web']['password']                    = 'zabbix'
 default['zabbix']['web']['install_method']              = 'apache'
@@ -24,6 +26,7 @@ default['zabbix']['web']['php']['settings']    = {
   'date.timezone'       => "'America/Sao_Paulo'",
 }
 
+# PHP modules changed in Ubuntu 16.04 Xenial Xerus.
 default['zabbix']['web']['packages'] = value_for_platform_family(
   'debian' =>
     if node['platform_version'].to_f < 16.0

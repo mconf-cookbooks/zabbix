@@ -1,4 +1,4 @@
-# Agent configuration for Zabbix 3.0.0
+# Agent settings for Zabbix 3.0.0.
 
 # Load default.rb to use node['zabbix']['etc_dir']
 include_attribute 'zabbix'

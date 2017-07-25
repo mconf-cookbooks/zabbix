@@ -1,6 +1,4 @@
-#
-# Cookbook Name:: zabbix
-# Attributes:: default
+# Common attributes used by both server and agent.
 
 case node['platform_family']
 when 'windows'
@@ -13,6 +11,7 @@ when 'windows'
 else
   default['zabbix']['etc_dir']      = '/etc/zabbix'
 end
+
 default['zabbix']['install_dir']  = '/opt/zabbix'
 default['zabbix']['web_dir']      = '/opt/zabbix/web'
 default['zabbix']['external_dir'] = '/opt/zabbix/externalscripts'
