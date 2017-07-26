@@ -8,7 +8,7 @@
 #
 
 if node['zabbix']['login']
-  # Create zabbix group
+  # Create zabbix group.
   group node['zabbix']['group'] do
     gid node['zabbix']['gid']
     if node['zabbix']['gid'].nil?
@@ -18,7 +18,7 @@ if node['zabbix']['login']
     end
   end
 
-  # Create zabbix User
+  # Create zabbix user.
   user node['zabbix']['login'] do
     comment 'zabbix User'
     home node['zabbix']['install_dir']
@@ -34,7 +34,7 @@ root_dirs = [
   node['zabbix']['alert_dir']
 ]
 
-# Create root folders
+# Create root folders.
 root_dirs.each do |dir|
   directory dir do
     owner 'root'

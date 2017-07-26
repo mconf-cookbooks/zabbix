@@ -1,15 +1,26 @@
+# Author:: Nacer Laradji (<nacer.laradji@gmail.com>)
+# Modified: Kazuki Yokoyama (<yokoyama.km@gmail.com>)
+# Cookbook Name:: zabbix
+# Recipe:: server
+#
+# Copyright 2011, Efactures
+#
+# Apache 2.0
+#
+
 include_recipe 'zabbix::common'
 
 ::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 
+# Use mconf-db cookbook to install MySQL.
 include_recipe 'mconf-db::default'
 
-# Generates passwords if they aren't already set
+# Generates passwords if they aren't already set.
 # This is INSECURE because node.normal persists the passwords to the chef
-# server, making them visible to anybody with access
+# server, making them visible to anybody with access.
 #
 # Under chef_solo these must be set somehow because node.normal doesn't persist
-# between runs
+# between runs.
 
 gem_package "mysql" do
   action :install
@@ -26,6 +37,7 @@ when 'rds_mysql'
   allowed_user_hosts  = '%'
   provider = Chef::Provider::ZabbixDatabaseMySql
 when 'mysql'
+  # In practice, this one is used.
   unless node['zabbix']['database']['root_password']
     node.normal['zabbix']['database']['root_password'] = secure_password
   end
@@ -41,18 +53,19 @@ when 'postgres'
   root_password       = node['postgresql']['password']['postgres']
   provider = Chef::Provider::ZabbixDatabasePostgres
 when 'oracle'
-  # No oracle database installation or configuration currently done
+  # No oracle database installation or configuration currently done.
   # This recipe expects a fully configured Oracle DB with a Zabbix
   # user + schema. The instant client is just for compiling php-oci8
-  # and Zabbix itself
+  # and Zabbix itself.
   include_recipe 'oracle-instantclient'
   include_recipe 'oracle-instantclient::sdk'
-  # Not used yet but needs to be set
+  # Not used yet but needs to be set.
   root_username       = 'sysdba'
   root_password       = 'not_applicable'
   provider = Chef::Provider::ZabbixDatabaseOracle
 end
 
+# Configure database to be used by Zabbix server.
 zabbix_database node['zabbix']['database']['dbname'] do
   provider provider
   host node['zabbix']['database']['dbhost']

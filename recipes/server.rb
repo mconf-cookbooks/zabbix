@@ -1,4 +1,5 @@
 # Author:: Nacer Laradji (<nacer.laradji@gmail.com>)
+# Modified: Kazuki Yokoyama (<yokoyama.km@gmail.com>)
 # Cookbook Name:: zabbix
 # Recipe:: server
 #

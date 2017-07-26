@@ -1,4 +1,5 @@
 # Author:: Nacer Laradji (<nacer.laradji@gmail.com>)
+# Modified: Kazuki Yokoyama (<yokoyama.km@gmail.com>)
 # Cookbook Name:: zabbix
 # Recipe:: server_source
 #
@@ -10,6 +11,7 @@
 include_recipe 'zabbix::common'
 include_recipe 'zabbix::server_common'
 
+# Set necessary packages for the server according to OS and database.
 packages = []
 case node['platform']
 when 'ubuntu', 'debian'
@@ -23,7 +25,7 @@ when 'ubuntu', 'debian'
     end
   when 'postgres'
     packages.push('libssh2-1-dev')
-  # Oracle oci8 PECL package installed below
+  # Oracle oci8 PECL package installed below.
   when 'oracle'
     php_packages = %w(php-pear php-dev)
     packages.push(*php_packages)
@@ -54,7 +56,7 @@ when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
       %w(php-pgsql php-gd php-bcmath php-mbstring php-xml)
     end
     packages.push(*php_packages)
-  # Oracle oci8 PECL package installed below
+  # Oracle oci8 PECL package installed below.
   when 'oracle'
     php_packages = %w(php-pear php-devel)
     packages.push(*php_packages)
@@ -62,19 +64,21 @@ when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
   init_template = 'zabbix_server.init-rh.erb'
 end
 
+# Install packages.
 packages.each do |pck|
   package pck do
     action :install
   end
 end
 
-# Install the oci8 pecl - common to both Debian and RHEL families
+# Install the oci8 pecl - common to both Debian and RHEL families.
 php_pear 'oci8' do
   preferred_state 'stable'
   action :install
   only_if { node['zabbix']['database']['install_method'] == 'oracle' }
 end
 
+# Set options used in compilation time.
 configure_options = node['zabbix']['server']['configure_options'].dup
 configure_options = (configure_options || Array.new).delete_if do |option|
   option.match(/\s*--prefix(\s|=).+/)
@@ -98,12 +102,13 @@ when 'oracle'
 end
 
 if node['zabbix']['server']['java_gateway_enable'] == true
-  include_recipe 'java' # install a JDK if not present
+  include_recipe 'java' # Install a JDK if not present.
   configure_options << '--enable-java' unless configure_options.include?('--enable-java')
 end
 
 node.normal['zabbix']['server']['configure_options'] = configure_options
 
+# Install Zabbix server from source.
 zabbix_source 'install_zabbix_server' do
   branch node['zabbix']['server']['branch']
   version node['zabbix']['server']['version']
@@ -118,7 +123,7 @@ zabbix_source 'install_zabbix_server' do
   action :install_server
 end
 
-# Install Init script
+# Install init script.
 template '/etc/init.d/zabbix_server' do
   source init_template
   owner 'root'
@@ -141,17 +146,18 @@ template "#{node['zabbix']['etc_dir']}/zabbix_server.conf" do
   notifies :restart, 'service[zabbix_server]', :delayed
 end
 
-# Define zabbix_agentd service
+# Define zabbix_agentd service.
 service 'zabbix_server' do
   supports :status => true, :start => true, :stop => true, :restart => true
   action [:start, :enable]
 end
 
-# Configure the Java Gateway
+# Configure the Java Gateway if enabled.
 if node['zabbix']['server']['java_gateway_enable'] == true
   include_recipe 'zabbix::java_gateway'
 end
 
+# Install web interface if enabled.
 if node['zabbix']['web']['install']
     include_recipe 'zabbix::web'
 end
