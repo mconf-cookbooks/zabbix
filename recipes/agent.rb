@@ -62,3 +62,8 @@ ruby_block 'restart service' do
 
   notifies :restart, 'service[zabbix_agentd]'
 end
+
+# Alway restart the service at the end of the recipe.
+service 'zabbix_agentd' do
+  action :start
+end
