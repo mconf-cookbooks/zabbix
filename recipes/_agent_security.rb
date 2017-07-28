@@ -29,7 +29,7 @@ if node['zabbix']['agent']['configurations']['TLSAccept'] == 'psk' or
   end
 
   # Set agent's PSK identity.
-  unless node['zabbix']['agent']['configurations']['PSKIdentity']
-    node.default['zabbix']['agent']['configurations']['PSKIdentity'] = node['hostname']
+  unless node['zabbix']['agent']['configurations']['TLSPSKIdentity']
+    node.default['zabbix']['agent']['configurations']['TLSPSKIdentity'] = node['hostname']
   end
 end
