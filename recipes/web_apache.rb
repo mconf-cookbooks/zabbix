@@ -112,3 +112,8 @@ end
 if node['zabbix']['web']['ssl']['enable']
   include_recipe "apache2::mod_ssl"
 end
+
+# Alway restart the service at the end of the recipe.
+service 'apache2' do
+  action :restart
+end

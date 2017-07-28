@@ -156,8 +156,3 @@ end
 if node['zabbix']['server']['java_gateway_enable'] == true
   include_recipe 'zabbix::java_gateway'
 end
-
-# Install web interface if enabled.
-if node['zabbix']['web']['install']
-    include_recipe 'zabbix::web'
-end
