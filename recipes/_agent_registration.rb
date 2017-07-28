@@ -8,7 +8,7 @@
 zabbix_web = node['zabbix']['agent']['register']
 
 connection_info = {
-  :url => zabbix_web['url'],
+  :url => "#{node['zabbix']['agent']['register']['url']}/api_jsonrpc.php",
   :user => zabbix_web['login'],
   :password => zabbix_web['password']
 }
@@ -125,7 +125,6 @@ zabbix_host node['zabbix']['agent']['hostname'] do
   create_missing_groups true
   server_connection connection_info
   parameters(
-    :host => node['hostname'],
     :groupNames => node['zabbix']['agent']['groups'],
     :templates => node['zabbix']['agent']['templates'],
     :interfaces => interface_data,
