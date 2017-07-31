@@ -1,4 +1,4 @@
-depends 'mconf-db'name 'zabbix'
+name 'zabbix'
 maintainer 'Nacer Laradji'
 maintainer_email 'nacer.laradji@gmail.com'
 license 'Apache 2.0'
