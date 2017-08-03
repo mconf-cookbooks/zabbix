@@ -49,7 +49,8 @@ ruby_block 'import_users' do
   block do
     ::Dir.foreach(tmp_users) do |item|
       if ::File.extname(item) == ".json"
-        user_data = JSON.parse(::File.read(item))
+        user_file = ::File.join(tmp_users, item)
+        user_data = JSON.parse(::File.read(user_file))
 
         # Although a little weird, this allows us to use resources
         # (in this case zabbix_configuration) inside a ruby_block resource.
@@ -59,7 +60,7 @@ ruby_block 'import_users' do
         # correctly queued to be executed after.
 
         # Create a new resource object.
-        user = Chef::Resource::ZabbixConfiguration.new(user_data['alias'], run_context)
+        user = Chef::Resource::ZabbixUser.new(user_data['alias'], run_context)
 
         # Configure the new resource object.
         user.server_connection connection_info
