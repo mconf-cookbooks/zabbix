@@ -7,6 +7,9 @@
 # Apache 2.0
 #
 
+include_recipe 'zabbix::agent_common'
+include_recipe 'zabbix::server_common'
+
 # Define root owned folders
 root_dirs = [
   node['zabbix']['etc_dir'],

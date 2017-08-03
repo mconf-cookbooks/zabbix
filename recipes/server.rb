@@ -8,6 +8,8 @@
 # Apache 2.0
 #
 
+include_recipe 'zabbix::common'
+
 include_recipe "zabbix::server_#{node['zabbix']['server']['install_method']}"
 
 # Install web interface if enabled.

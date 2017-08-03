@@ -1,5 +1,6 @@
+include_recipe 'zabbix::common'
+
 include_recipe "zabbix::agent_#{node['zabbix']['agent']['install_method']}"
-include_recipe 'zabbix::agent_common'
 
 # Install TLS security to be used when communicating with Zabbix server.
 include_recipe 'zabbix::_agent_security'

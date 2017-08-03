@@ -8,9 +8,6 @@
 # Apache 2.0
 #
 
-include_recipe 'zabbix::common'
-include_recipe 'zabbix::server_common'
-
 # Set necessary packages for the server according to OS and database.
 packages = []
 case node['platform']
