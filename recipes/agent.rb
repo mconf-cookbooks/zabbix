@@ -23,7 +23,7 @@ end
 
 # Copy scripts from files/default to scripts/.
 remote_directory node['zabbix']['agent']['scripts_dir'] do
-  source 'agent/agent_scripts'
+  source 'agent/scripts'
   owner 'root'
   group 'root'
   mode '0755'
