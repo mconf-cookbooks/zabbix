@@ -8,7 +8,7 @@
 zabbix_web = node['zabbix']['agent']['register']
 
 connection_info = {
-  :url => "#{node['zabbix']['agent']['register']['url']}/api_jsonrpc.php",
+  :url => "#{zabbix_web['protocol']}://#{zabbix_web['fqdn']}/api_jsonrpc.php",
   :user => zabbix_web['login'],
   :password => zabbix_web['password']
 }

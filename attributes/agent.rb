@@ -46,16 +46,17 @@ default['zabbix']['agent']['snmp_port']          = '161'
 
 # Register settings.
 
-default['zabbix']['agent']['register']['enabled']            = false
-default['zabbix']['agent']['register']['url']                = ""
+default['zabbix']['agent']['register']['enabled']            = true
+default['zabbix']['agent']['register']['fqdn']               = node['fqdn']
 default['zabbix']['agent']['register']['login']              = ""
 default['zabbix']['agent']['register']['password']           = ""
-default['zabbix']['agent']['register']['ssl']['enabled']     = false
+default['zabbix']['agent']['register']['protocol']           = 'https'
 default['zabbix']['agent']['register']['connection_retries'] = 3
 
 # Default parameters.
 
 default['zabbix']['agent']['configurations']['Hostname']   = node['fqdn']
+default['zabbix']['agent']['configurations']['Server']     = '127.0.0.1'
 default['zabbix']['agent']['configurations']['Include']    = ::File.join(node['zabbix']['etc_dir'], 'include')
 default['zabbix']['agent']['configurations']['ListenPort'] = '10050'
 default['zabbix']['agent']['configurations']['LogFile']    = ::File.join(node['zabbix']['log_dir'], 'zabbix_agentd.log')
