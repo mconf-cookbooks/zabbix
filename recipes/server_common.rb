@@ -10,12 +10,8 @@
 if node['zabbix']['login']
   # Create zabbix group.
   group node['zabbix']['group'] do
-    gid node['zabbix']['gid']
-    if node['zabbix']['gid'].nil?
-      action :nothing
-    else
-      action :create
-    end
+    gid node['zabbix']['gid'] if node['zabbix']['gid']
+    system true
   end
 
   # Create zabbix user.
@@ -24,7 +20,7 @@ if node['zabbix']['login']
     home node['zabbix']['install_dir']
     shell node['zabbix']['shell']
     uid node['zabbix']['uid']
-    gid node['zabbix']['gid']
+    gid node['zabbix']['group']
   end
 end
 
