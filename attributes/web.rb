@@ -7,12 +7,13 @@ default['zabbix']['web']['fqdn']                        = node['fqdn']
 default['zabbix']['web']['aliases']                     = ['zabbix']
 default['zabbix']['web']['port']                        = 80
 default['zabbix']['web']['install']                     = false
-default['zabbix']['web']['ssl']['enable']               = false
+default['zabbix']['web']['ssl']['enabled']              = true
+default['zabbix']['web']['ssl']['dir']                  = '/etc/apache2/ssl'
 default['zabbix']['web']['ssl']['port']                 = 443
 default['zabbix']['web']['ssl']['certificate_file']     = nil
 default['zabbix']['web']['ssl']['certificate_key_file'] = nil
 default['zabbix']['web']['connection_retries']          = 1
-default['zabbix']['web']['protocol']                    = node['zabbix']['web']['ssl']['enable'] ? 'https' : 'http'
+default['zabbix']['web']['protocol']                    = node['zabbix']['web']['ssl']['enabled'] ? 'https' : 'http'
 default['zabbix']['web']['url']                         = "#{node['zabbix']['web']['protocol']}://#{node['zabbix']['web']['fqdn']}/api_jsonrpc.php"
 default['apache']['mpm']                                = "prefork"
 

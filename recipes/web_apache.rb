@@ -68,6 +68,41 @@ template "#{node['zabbix']['src_dir']}/zabbix-#{node['zabbix']['server']['versio
   )
 end
 
+if node['zabbix']['web']['ssl']['enabled']
+    # We must enable SSL manually on Apache2.
+    include_recipe "apache2::mod_ssl"
+    
+    directory node['zabbix']['web']['ssl']['dir'] do
+        owner 'root'
+        group 'root'
+        mode '0755'
+        recursive true
+        action :create
+    end
+
+    certificate_path = ::File.join(node['zabbix']['web']['ssl']['dir'],
+                                   node['zabbix']['web']['ssl']['certificate_file'])
+
+    certificate_key_path = ::File.join(node['zabbix']['web']['ssl']['dir'],
+                                       node['zabbix']['web']['ssl']['certificate_key_file'])
+
+    cookbook_file certificate_path do
+        source "server/ssl/#{node['zabbix']['web']['ssl']['certificate_file']}"
+        owner node['zabbix']['login']
+        group node['zabbix']['group']
+        mode '0600'
+        action :create
+    end
+
+    cookbook_file certificate_key_path do
+        source "server/ssl/#{node['zabbix']['web']['ssl']['certificate_key_file']}"
+        owner node['zabbix']['login']
+        group node['zabbix']['group']
+        mode '0600'
+        action :create
+    end
+end
+
 # Install vhost for Zabbix web frontend.
 web_app node['zabbix']['web']['fqdn'] do
   server_name node['zabbix']['web']['fqdn']
@@ -76,11 +111,11 @@ web_app node['zabbix']['web']['fqdn'] do
   docroot node['zabbix']['web_dir']
   not_if { node['zabbix']['web']['fqdn'].nil? }
   php_settings node['zabbix']['web']['php']['settings']
-  ssl_enable node['zabbix']['web']['ssl']['enable']
+  ssl_enable node['zabbix']['web']['ssl']['enabled']
   ssl_port node['zabbix']['web']['ssl']['port']
-  certificate_file node['zabbix']['web']['ssl']['certificate_file']
-  certificate_key_file node['zabbix']['web']['ssl']['certificate_key_file']
-  protocol node['zabbix']['web']['ssl']['enable'] ? "https" : "http"
+  certificate_file certificate_path
+  certificate_key_file certificate_key_path
+  protocol node['zabbix']['web']['ssl']['enabled'] ? "https" : "http"
   template 'apache-site.conf.erb'
   notifies :restart, 'service[apache2]', :immediately
 end
@@ -106,11 +141,6 @@ template php_ini_filepath do
   mode '644'
   variables(:dbsocket => node['zabbix']['database']['dbsocket'])
   notifies :restart, 'service[apache2]', :immediately
-end
-
-# We must enable SSL manually on Apache2.
-if node['zabbix']['web']['ssl']['enable']
-  include_recipe "apache2::mod_ssl"
 end
 
 # Alway restart the service at the end of the recipe.
