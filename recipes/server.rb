@@ -19,7 +19,15 @@ include_recipe 'zabbix::_import_templates'
 include_recipe 'zabbix::_import_mediatypes'
 include_recipe 'zabbix::_import_users'
 
-# Alway restart the service at the end of the recipe.
+# Always restart the service at the end of the cookbook.
+ruby_block 'restart service' do
+  block do
+    true
+  end
+
+  notifies :restart, 'service[zabbix_server]'
+end
+
 service 'zabbix_server' do
-  action :start
+  action :nothing
 end

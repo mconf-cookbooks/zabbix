@@ -27,7 +27,12 @@ when 'ubuntu', 'debian'
     php_packages = %w(php-pear php-dev)
     packages.push(*php_packages)
   end
-  init_template = 'zabbix_server.init.erb'
+  init_template =
+    if node['platform_version'].to_f >= 16
+      'zabbix_server16_04.init.erb'
+    else
+      'zabbix_server14_04.init.erb'
+    end
 when 'redhat', 'centos', 'scientific', 'amazon', 'oracle'
   include_recipe 'yum-epel'
 
@@ -126,7 +131,6 @@ template '/etc/init.d/zabbix_server' do
   owner 'root'
   group 'root'
   mode '755'
-  notifies :restart, 'service[zabbix_server]', :delayed
 end
 
 # Install Zabbix server configuration file.
@@ -140,7 +144,6 @@ template "#{node['zabbix']['etc_dir']}/zabbix_server.conf" do
     :version => node['zabbix']['server']['version'],
     :configurations => node['zabbix']['server']['configurations']
   )
-  notifies :restart, 'service[zabbix_server]', :delayed
 end
 
 # Define zabbix_agentd service.
@@ -150,6 +153,4 @@ service 'zabbix_server' do
 end
 
 # Configure the Java Gateway if enabled.
-if node['zabbix']['server']['java_gateway_enable'] == true
-  include_recipe 'zabbix::java_gateway'
-end
+include_recipe 'zabbix::java_gateway' if node['zabbix']['server']['java_gateway_enable']
