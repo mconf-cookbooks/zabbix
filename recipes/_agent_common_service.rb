@@ -1,8 +1,20 @@
 # Manage Agent service
 case node['zabbix']['agent']['init_style']
 when 'sysvinit'
+  init_template =
+    case node['platform_family']
+    when 'rhel'
+      'zabbix_agentd.init-rh.erb'
+    else
+      if node['platform_version'].to_f >= 16
+        'zabbix_agentd16_04.init.erb'
+      else
+        'zabbix_agentd14_04.init.erb'
+      end
+    end
+
   template '/etc/init.d/zabbix_agentd' do
-    source value_for_platform_family(['rhel'] => 'zabbix_agentd.init-rh.erb', 'default' => 'zabbix_agentd.init.erb')
+    source init_template
     owner 'root'
     group 'root'
     mode '754'

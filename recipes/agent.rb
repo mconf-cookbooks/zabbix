@@ -43,28 +43,19 @@ end
 
 # Register the agent to the server.
 # TODO: Caution with idempotence. It should register only once.
-if node['zabbix']['agent']['register']['enabled']
-  include_recipe 'zabbix::_agent_registration'
-end
+include_recipe 'zabbix::_agent_registration' if node['zabbix']['agent']['register']['enabled']
 
 ruby_block 'start service' do
   block do
     true
   end
+
   Array(node['zabbix']['agent']['service_state']).each do |action|
     notifies action, 'service[zabbix_agentd]'
   end
 end
 
-ruby_block 'restart service' do
-  block do
-    true
-  end
-
-  notifies :restart, 'service[zabbix_agentd]'
-end
-
-# Alway restart the service at the end of the recipe.
+# Always restart the service at the end of the recipe.
 service 'zabbix_agentd' do
   action :start
 end
