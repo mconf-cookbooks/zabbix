@@ -48,8 +48,8 @@ default['zabbix']['agent']['snmp_port']          = '161'
 
 default['zabbix']['agent']['register']['enabled']            = true
 default['zabbix']['agent']['register']['fqdn']               = node['fqdn']
-default['zabbix']['agent']['register']['login']              = ""
-default['zabbix']['agent']['register']['password']           = ""
+default['zabbix']['agent']['register']['login']              = "admin"
+default['zabbix']['agent']['register']['password']           = "zabbix"
 default['zabbix']['agent']['register']['protocol']           = 'https'
 default['zabbix']['agent']['register']['connection_retries'] = 3
 
