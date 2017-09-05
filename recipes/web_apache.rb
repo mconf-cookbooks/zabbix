@@ -71,7 +71,7 @@ end
 if node['zabbix']['web']['ssl']['enabled']
     # We must enable SSL manually on Apache2.
     include_recipe "apache2::mod_ssl"
-    
+
     directory node['zabbix']['web']['ssl']['dir'] do
         owner 'root'
         group 'root'
@@ -92,6 +92,7 @@ if node['zabbix']['web']['ssl']['enabled']
         group node['zabbix']['group']
         mode '0600'
         action :create
+        only_if { run_context.has_cookbook_file_in_cookbook?(cookbook_name, node['zabbix']['web']['ssl']['certificate_file']) }
     end
 
     cookbook_file certificate_key_path do
@@ -100,6 +101,7 @@ if node['zabbix']['web']['ssl']['enabled']
         group node['zabbix']['group']
         mode '0600'
         action :create
+        only_if { run_context.has_cookbook_file_in_cookbook?(cookbook_name, node['zabbix']['web']['ssl']['certificate_key_file']) }
     end
 end
 
